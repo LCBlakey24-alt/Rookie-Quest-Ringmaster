@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+<rect width="1600" height="900" fill="#0F1115"/>
+<rect x="20" y="20" width="1560" height="70" rx="12" fill="#171A21"/>
+<text x="40" y="64" fill="#E8ECF3" font-size="28" font-family="Arial" font-weight="700">ROOKIE QUEST: RINGMASTER — WEEKLY COMMAND CENTER</text>
+<rect x="20" y="110" width="410" height="770" rx="14" fill="#171A21"/>
+<rect x="450" y="110" width="610" height="770" rx="14" fill="#171A21"/>
+<rect x="1080" y="110" width="500" height="770" rx="14" fill="#171A21"/>
+<text x="40" y="150" fill="#4DA3FF" font-size="26" font-family="Arial" font-weight="700">Inbox / Alerts</text>
+<text x="470" y="150" fill="#4DA3FF" font-size="26" font-family="Arial" font-weight="700">Show Booking Board</text>
+<text x="1100" y="150" fill="#4DA3FF" font-size="26" font-family="Arial" font-weight="700">Finance + World Rank</text>
+<rect x="35" y="180" width="380" height="52" rx="10" fill="#232734"/><text x="50" y="212" fill="#FFB020" font-size="18" font-family="Arial">Contract expiring: Jax Storm (14d)</text>
+<rect x="35" y="245" width="380" height="52" rx="10" fill="#232734"/><text x="50" y="277" fill="#FF5C5C" font-size="18" font-family="Arial">Morale dip: Rhea Vale</text>
+<rect x="35" y="310" width="380" height="52" rx="10" fill="#232734"/><text x="50" y="342" fill="#37D67A" font-size="18" font-family="Arial">Sponsorship offer received</text>
+<rect x="470" y="185" width="570" height="70" rx="10" fill="#232734"/><text x="490" y="228" fill="#E8ECF3" font-size="24" font-family="Arial">1. Opening Promo</text>
+<rect x="470" y="269" width="570" height="70" rx="10" fill="#232734"/><text x="490" y="312" fill="#E8ECF3" font-size="24" font-family="Arial">2. Tag Match</text>
+<rect x="470" y="353" width="570" height="70" rx="10" fill="#232734"/><text x="490" y="396" fill="#E8ECF3" font-size="24" font-family="Arial">3. Main Event</text>
+<rect x="1100" y="180" width="460" height="86" rx="10" fill="#232734"/><text x="1120" y="214" fill="#A7B0C0" font-size="18" font-family="Arial">Cash</text><text x="1120" y="248" fill="#E8ECF3" font-size="28" font-family="Arial">$1,240,000</text>
+<rect x="1100" y="282" width="460" height="86" rx="10" fill="#232734"/><text x="1120" y="316" fill="#A7B0C0" font-size="18" font-family="Arial">World Rank</text><text x="1120" y="350" fill="#E8ECF3" font-size="28" font-family="Arial">#7</text>
+<text x="40" y="850" fill="#A7B0C0" font-size="18" font-family="Arial">Style A: Broadcast Executive (Recommended)</text>
+</svg>

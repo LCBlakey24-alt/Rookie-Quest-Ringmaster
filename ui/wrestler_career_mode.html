@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Ringmaster — Wrestler Career Mode</title>
+<style>
+:root{--bg:#0f1115;--panel:#171a21;--card:#232734;--text:#e8ecf3;--muted:#a7b0c0;--ok:#37d67a;--warn:#ffb020;--bad:#ff5c5c;--primary:#4da3ff}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}.wrap{max-width:1200px;margin:0 auto;padding:20px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.card{background:var(--panel);border:1px solid #2c3140;border-radius:12px;padding:12px}
+.k{background:var(--card);border:1px solid #2c3140;border-radius:8px;padding:8px;margin-top:8px}
+button{border:0;border-radius:8px;padding:10px 12px;margin-top:8px;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--ok));color:#091018;cursor:pointer}
+.small{font-size:13px;color:var(--muted)}
+</style></head><body><div class="wrap"><h1>Wrestler Career Mode Prototype</h1>
+<div class="grid"><section class="card"><h3>Career Actions</h3>
+<button id="exclusive">Sign Exclusive Contract</button>
+<button id="optionalSkip">Skip Optional Indy Show (Date Night)</button>
+<button id="mandatorySkip">Skip Mandatory Mega Show</button>
+<button id="safeSpot">In-Match: Choose Safe Sequence</button>
+<button id="riskySpot">In-Match: Choose Risky Spot</button>
+<div class="small" id="note" style="margin-top:10px">Choose an action.</div></section>
+<section class="card"><h3>Career State</h3><div id="state"></div></section></div></div>
+<script>
+let state={name:'Rook Steel',popularity:40,money:10000,morale:65,reliability:70,injuries:0};
+const note=document.getElementById('note');
+function render(){
+ document.getElementById('state').innerHTML=`
+  <div class='k'>Popularity: ${state.popularity}</div>
+  <div class='k'>Money: $${state.money.toLocaleString()}</div>
+  <div class='k'>Morale: ${state.morale}</div>
+  <div class='k'>Reliability: ${state.reliability}</div>
+  <div class='k'>Injuries: ${state.injuries}</div>
+ `;
+}
+function clamp(v,min,max){return Math.max(min,Math.min(max,v));}
+document.getElementById('exclusive').onclick=()=>{state.popularity=clamp(state.popularity+4,0,100);state.money+=25000;state.morale=clamp(state.morale-3,0,100);state.reliability=clamp(state.reliability+5,0,100);note.textContent='Signed exclusive deal: more money/visibility, less morale freedom.';render();};
+document.getElementById('optionalSkip').onclick=()=>{state.popularity=clamp(state.popularity-1,0,100);state.morale=clamp(state.morale+2,0,100);state.reliability=clamp(state.reliability-3,0,100);note.textContent='Skipped optional booking: personal recovery, slight reputation cost.';render();};
+document.getElementById('mandatorySkip').onclick=()=>{state.popularity=clamp(state.popularity-6,0,100);state.money-=8000;state.reliability=clamp(state.reliability-15,0,100);note.textContent='Skipped mandatory mega show: severe reliability fallout.';render();};
+document.getElementById('safeSpot').onclick=()=>{state.popularity=clamp(state.popularity+1,0,100);state.reliability=clamp(state.reliability+1,0,100);note.textContent='Safe sequence chosen: consistent but lower pop.';render();};
+document.getElementById('riskySpot').onclick=()=>{state.popularity=clamp(state.popularity+3,0,100);state.morale=clamp(state.morale-1,0,100);state.injuries+=1;note.textContent='Risky spot chosen: bigger reaction, higher injury risk.';render();};
+render();
+</script></body></html>

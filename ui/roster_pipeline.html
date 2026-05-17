@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Ringmaster — Roster Pipeline</title>
+<style>
+:root{--bg:#0f1115;--panel:#171a21;--card:#232734;--text:#e8ecf3;--muted:#a7b0c0;--ok:#37d67a;--warn:#ffb020;--bad:#ff5c5c;--primary:#4da3ff}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}.wrap{max-width:1200px;margin:0 auto;padding:20px}
+.card{background:var(--panel);border:1px solid #2c3140;border-radius:12px;padding:12px;margin-top:12px}.k{background:var(--card);border:1px solid #2c3140;border-radius:8px;padding:8px;margin-top:8px}
+button{border:0;border-radius:8px;padding:10px 12px;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--ok));color:#091018;cursor:pointer}
+</style></head><body><div class="wrap"><h1>Roster Pipeline Prototype</h1>
+<div class="card"><div>Evaluate prospect graduation into main roster with loyalty tradeoffs.</div><button id="run">Run Graduation</button><div id="out"></div></div></div>
+<script>
+const prospects=[
+ {id:'p1',name:'Rook Steel',readiness:78,loyalty:60},
+ {id:'p2',name:'Sky Drift',readiness:65,loyalty:70},
+ {id:'p3',name:'Volt Reign',readiness:82,loyalty:20}
+];
+function run(){
+ const promoted=[],stayed=[],released=[];
+ prospects.forEach(p=>{
+  if(p.readiness>=70 && p.loyalty>=45) promoted.push(p.name);
+  else if(p.readiness>=70 && p.loyalty<25) released.push(p.name);
+  else stayed.push(p.name);
+ });
+ document.getElementById('out').innerHTML=`
+  <div class='k' style='color:var(--ok)'>Promoted: ${promoted.join(', ')||'None'}</div>
+  <div class='k' style='color:var(--warn)'>Stayed in Development: ${stayed.join(', ')||'None'}</div>
+  <div class='k' style='color:var(--bad)'>Left Company Risk: ${released.join(', ')||'None'}</div>
+ `;
+}
+document.getElementById('run').addEventListener('click',run);
+</script></body></html>

@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Rookie Quest: Ringmaster — Select Brand</title>
+  <style>
+    :root { --bg:#0f1115; --panel:#171a21; --card:#232734; --text:#e8ecf3; --muted:#a7b0c0; --info:#4da3ff; --ok:#37d67a; }
+    body { margin:0; font-family: Inter, Arial, sans-serif; background: var(--bg); color: var(--text); }
+    .wrap { max-width: 1280px; margin: 0 auto; padding: 24px; }
+    .top { display:flex; justify-content:space-between; align-items:center; margin-bottom: 16px; }
+    h1 { margin:0; font-size: 32px; }
+    .muted { color: var(--muted); }
+    .toolbar { background: var(--panel); border:1px solid #2c3140; border-radius:12px; padding:12px; display:flex; gap:10px; align-items:center; }
+    input, select { background:#0f131c; color:var(--text); border:1px solid #2c3140; border-radius:8px; padding:10px; }
+    .grid { margin-top: 14px; display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; }
+    .card { background: var(--panel); border:1px solid #2c3140; border-radius:12px; padding:14px; }
+    .name { font-weight:700; margin-bottom:6px; }
+    .pill { display:inline-block; border:1px solid #2c3140; border-radius:999px; padding:2px 10px; color:var(--muted); font-size:12px; }
+    .stats { margin:8px 0; font-size:14px; color:var(--muted); line-height:1.5; }
+    button { background: linear-gradient(135deg,var(--info),var(--ok)); border:0; color:#091018; font-weight:700; padding:10px 12px; border-radius:8px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <h1>Select a Brand</h1>
+        <div class="muted">Choose an existing promotion or return to create your own.</div>
+      </div>
+      <div style='display:flex;gap:10px;'><button onclick="window.location.href='brand_creator.html'">Create Custom Brand Instead</button><button onclick="window.location.href='main_menu.html'">Back to Menu</button></div>
+    </div>
+
+    <div class="toolbar">
+      <input id="search" placeholder="Search brand..." />
+      <select id="regionFilter">
+        <option value="">All Regions</option>
+      </select>
+      <span class="muted" id="count"></span>
+    </div>
+
+    <div class="grid" id="grid"></div>
+  </div>
+
+  <script>
+    const countries = [
+      {code:'US',name:'United States',region:'North America',pop:333},{code:'CA',name:'Canada',region:'North America',pop:40},{code:'MX',name:'Mexico',region:'North America',pop:129},
+      {code:'BR',name:'Brazil',region:'South America',pop:203},{code:'AR',name:'Argentina',region:'South America',pop:46},{code:'GB',name:'United Kingdom',region:'Europe',pop:68},
+      {code:'DE',name:'Germany',region:'Europe',pop:84},{code:'FR',name:'France',region:'Europe',pop:65},{code:'ES',name:'Spain',region:'Europe',pop:48},
+      {code:'IT',name:'Italy',region:'Europe',pop:59},{code:'JP',name:'Japan',region:'Asia',pop:124},{code:'KR',name:'South Korea',region:'Asia',pop:52},
+      {code:'CN',name:'China',region:'Asia',pop:1410},{code:'IN',name:'India',region:'Asia',pop:1430},{code:'AU',name:'Australia',region:'Oceania',pop:27},
+      {code:'NZ',name:'New Zealand',region:'Oceania',pop:5},{code:'ZA',name:'South Africa',region:'Africa',pop:62},{code:'EG',name:'Egypt',region:'Africa',pop:112},
+      {code:'NG',name:'Nigeria',region:'Africa',pop:227},{code:'AE',name:'United Arab Emirates',region:'Middle East',pop:10}
+    ];
+
+    const brands = countries.map((c, idx) => ({
+      id: `brand_${c.code.toLowerCase()}`,
+      name: `${c.name} Pro Wrestling`,
+      country: c.code,
+      region: c.region,
+      quality: Math.max(45, Math.min(95, 50 + (idx % 10) * 4)),
+      popularity: Math.max(35, Math.min(95, 40 + Math.floor(c.pop / 20))),
+      budget: 200000 + c.pop * 2500,
+    }));
+
+    const grid = document.getElementById('grid');
+    const search = document.getElementById('search');
+    const regionFilter = document.getElementById('regionFilter');
+    const count = document.getElementById('count');
+
+    [...new Set(countries.map(c => c.region))].sort().forEach(region => {
+      const opt = document.createElement('option');
+      opt.value = region;
+      opt.textContent = region;
+      regionFilter.appendChild(opt);
+    });
+
+    function render() {
+      const q = search.value.toLowerCase().trim();
+      const region = regionFilter.value;
+      const filtered = brands.filter(b => (!q || b.name.toLowerCase().includes(q)) && (!region || b.region === region));
+
+      count.textContent = `${filtered.length} brands shown`;
+      grid.innerHTML = '';
+      filtered
+        .sort((a,b) => (b.popularity*0.7 + b.quality*0.3) - (a.popularity*0.7 + a.quality*0.3))
+        .forEach(b => {
+          const card = document.createElement('article');
+          card.className = 'card';
+          card.innerHTML = `
+            <div class="name">${b.name}</div>
+            <span class="pill">${b.region} • ${b.country}</span>
+            <div class="stats">Popularity: <strong>${b.popularity}</strong><br/>Quality: <strong>${b.quality}</strong><br/>Budget: <strong>$${b.budget.toLocaleString()}</strong></div>
+            <button data-id="${b.id}">Select Brand</button>
+          `;
+          card.querySelector('button').onclick = () => {
+            localStorage.setItem('ringmaster_selected_brand', b.id);
+            window.location.href='campaign_dashboard.html';
+          };
+          grid.appendChild(card);
+        });
+    }
+
+    search.addEventListener('input', render);
+    regionFilter.addEventListener('change', render);
+    render();
+  </script>
+</body>
+</html>
