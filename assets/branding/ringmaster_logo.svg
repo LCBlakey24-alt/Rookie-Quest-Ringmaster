@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="500" viewBox="0 0 1200 500">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#4DA3FF"/>
+      <stop offset="100%" stop-color="#37D67A"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="500" fill="#0F1115"/>
+  <g transform="translate(70,60)">
+    <rect x="0" y="0" width="1060" height="380" rx="24" fill="#171A21" stroke="#2C3140"/>
+    <text x="530" y="120" text-anchor="middle" fill="#A7B0C0" font-size="40" font-family="Arial">ROOKIE QUEST GAME PRESENTS</text>
+    <text x="530" y="220" text-anchor="middle" fill="url(#g)" font-size="76" font-family="Arial" font-weight="700">ROOKIE QUEST:</text>
+    <text x="530" y="300" text-anchor="middle" fill="#E8ECF3" font-size="78" font-family="Arial" font-weight="700">RINGMASTER</text>
+    <text x="530" y="350" text-anchor="middle" fill="#FFB020" font-size="28" font-family="Arial">BOOK. BUILD. DOMINATE.</text>
+  </g>
+</svg>

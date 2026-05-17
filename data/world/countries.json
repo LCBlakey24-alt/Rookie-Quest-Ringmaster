@@ -1,0 +1,22 @@
+[
+  {"code": "US", "name": "United States", "region": "North America", "population_m": 333},
+  {"code": "CA", "name": "Canada", "region": "North America", "population_m": 40},
+  {"code": "MX", "name": "Mexico", "region": "North America", "population_m": 129},
+  {"code": "BR", "name": "Brazil", "region": "South America", "population_m": 203},
+  {"code": "AR", "name": "Argentina", "region": "South America", "population_m": 46},
+  {"code": "GB", "name": "United Kingdom", "region": "Europe", "population_m": 68},
+  {"code": "DE", "name": "Germany", "region": "Europe", "population_m": 84},
+  {"code": "FR", "name": "France", "region": "Europe", "population_m": 65},
+  {"code": "ES", "name": "Spain", "region": "Europe", "population_m": 48},
+  {"code": "IT", "name": "Italy", "region": "Europe", "population_m": 59},
+  {"code": "JP", "name": "Japan", "region": "Asia", "population_m": 124},
+  {"code": "KR", "name": "South Korea", "region": "Asia", "population_m": 52},
+  {"code": "CN", "name": "China", "region": "Asia", "population_m": 1410},
+  {"code": "IN", "name": "India", "region": "Asia", "population_m": 1430},
+  {"code": "AU", "name": "Australia", "region": "Oceania", "population_m": 27},
+  {"code": "NZ", "name": "New Zealand", "region": "Oceania", "population_m": 5},
+  {"code": "ZA", "name": "South Africa", "region": "Africa", "population_m": 62},
+  {"code": "EG", "name": "Egypt", "region": "Africa", "population_m": 112},
+  {"code": "NG", "name": "Nigeria", "region": "Africa", "population_m": 227},
+  {"code": "AE", "name": "United Arab Emirates", "region": "Middle East", "population_m": 10}
+]
