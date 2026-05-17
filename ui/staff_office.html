@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Ringmaster — Staff Office</title>
+<style>
+:root{--bg:#0f1115;--panel:#171a21;--card:#232734;--text:#e8ecf3;--muted:#a7b0c0;--primary:#4da3ff;--ok:#37d67a;--warn:#ffb020}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}.wrap{max-width:1200px;margin:0 auto;padding:20px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.card{background:var(--panel);border:1px solid #2c3140;border-radius:12px;padding:12px}
+select,input{width:100%;margin-top:6px;padding:10px;border-radius:8px;border:1px solid #2c3140;background:#0f131c;color:var(--text)}
+button{border:0;border-radius:8px;padding:10px 12px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--primary),var(--ok));color:#091018;margin-top:10px}
+.small{font-size:13px;color:var(--muted)} .kpi{background:var(--card);border:1px solid #2c3140;border-radius:8px;padding:8px;margin-top:8px}
+</style></head><body><div class="wrap"><h1>Staff Office Prototype</h1>
+<div class="grid"><section class="card"><h3>Hire Setup</h3>
+<label>Core Style<select id="style"><option>sports_drama</option><option>cinematic</option><option>spectacle</option></select></label>
+<label>Budget<input id="budget" type="number" value="120000"/></label>
+<label>Creative Staff Skill<input id="creative" type="number" value="82"/></label>
+<label>Technical Staff Skill<input id="technical" type="number" value="78"/></label>
+<label>Music Staff Skill<input id="music" type="number" value="88"/></label>
+<label>Music Style<select id="musicStyle"><option>cinematic</option><option>sports_drama</option><option>spectacle</option></select></label>
+<button id="eval">Evaluate Staff Synergy</button></section>
+<section class="card"><h3>Synergy Report</h3><div id="out" class="small">Run evaluation.</div></section></div></div>
+<script>
+function evalReport(){
+ const style=document.getElementById('style').value;
+ const budget=Number(document.getElementById('budget').value||0);
+ const c=Number(document.getElementById('creative').value||0);
+ const t=Number(document.getElementById('technical').value||0);
+ const m=Number(document.getElementById('music').value||0);
+ const mStyle=document.getElementById('musicStyle').value;
+ const creativeBonus=(c+m)/120; const technicalBonus=t/120;
+ let mismatch=0; if(mStyle!==style) mismatch+=0.8;
+ const payroll=45000+42000+50000; const pressure=Math.max(0,(payroll-budget)/Math.max(1,budget)*10);
+ const net=(creativeBonus+technicalBonus-mismatch-pressure).toFixed(2);
+ document.getElementById('out').innerHTML=`
+  <div class='kpi'>Creative Bonus: +${creativeBonus.toFixed(2)}</div>
+  <div class='kpi'>Technical Bonus: +${technicalBonus.toFixed(2)}</div>
+  <div class='kpi'>Mismatch Penalty: -${mismatch.toFixed(2)}</div>
+  <div class='kpi'>Payroll Pressure: -${pressure.toFixed(2)}</div>
+  <div class='kpi'><strong>Net Weekly Effect: ${net}</strong></div>
+ `;
+}
+document.getElementById('eval').addEventListener('click',evalReport);
+</script></body></html>

@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Ringmaster — Development Center</title>
+<style>
+:root{--bg:#0f1115;--panel:#171a21;--card:#232734;--text:#e8ecf3;--muted:#a7b0c0;--primary:#4da3ff;--ok:#37d67a;--warn:#ffb020}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}.wrap{max-width:1200px;margin:0 auto;padding:20px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.card{background:var(--panel);border:1px solid #2c3140;border-radius:12px;padding:12px}
+label{display:block;color:var(--muted);margin-top:10px} input,select{width:100%;margin-top:6px;padding:10px;border-radius:8px;border:1px solid #2c3140;background:#0f131c;color:var(--text)}
+button{margin-top:10px;border:0;border-radius:8px;padding:10px 12px;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--ok));color:#091018;cursor:pointer}
+.kpi{background:var(--card);border:1px solid #2c3140;border-radius:8px;padding:8px;margin-top:8px}.warn{color:var(--warn)}
+</style></head><body><div class="wrap"><h1>Development Center Prototype</h1>
+<div class="grid"><section class="card"><h3>Development Show Setup</h3>
+<label>Enable Development Show<select id="enabled"><option value="yes">Yes</option><option value="no">No</option></select></label>
+<label>Training Quality (1-100)<input id="quality" type="number" min="1" max="100" value="70"/></label>
+<label>Prospect Readiness<input id="readiness" type="number" min="1" max="100" value="45"/></label>
+<label>Prospect Loyalty<input id="loyalty" type="number" min="1" max="100" value="68"/></label>
+<label>Sign External Free Agent Instead?<select id="external"><option value="no">No</option><option value="yes">Yes</option></select></label>
+<button id="run">Run Week</button></section>
+<section class="card"><h3>Development Report</h3><div id="out">Run simulation.</div></section></div></div>
+<script>
+function run(){
+ const enabled=document.getElementById('enabled').value==='yes';
+ const q=Math.max(1,Math.min(100,Number(document.getElementById('quality').value||70)));
+ const r=Math.max(1,Math.min(100,Number(document.getElementById('readiness').value||45)));
+ const l=Math.max(1,Math.min(100,Number(document.getElementById('loyalty').value||68)));
+ const external=document.getElementById('external').value==='yes';
+ const cost=enabled?(20000+q*600):0;
+ const growth=enabled?Math.max(1,Math.floor(q/20)):0;
+ let readiness=Math.min(100,r+growth);
+ let loyalty=l;
+ let note='Internal pathway protected.';
+ if(external){ loyalty=Math.max(0,l-12); note='External signing blocked pathway; prospect loyalty dropped.'; }
+ else { loyalty=Math.min(100,l+4); readiness=Math.min(100,readiness+3); }
+ document.getElementById('out').innerHTML=`
+  <div class='kpi'>Weekly Development Cost: $${cost.toLocaleString()}</div>
+  <div class='kpi'>Prospect Readiness: ${r} → ${readiness}</div>
+  <div class='kpi'>Prospect Loyalty: ${l} → ${loyalty}</div>
+  <div class='kpi ${external?'warn':''}'>${note}</div>
+ `;
+}
+document.getElementById('run').addEventListener('click',run);
+</script></body></html>

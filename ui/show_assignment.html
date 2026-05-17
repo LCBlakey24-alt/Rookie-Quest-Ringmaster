@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Ringmaster — Show Assignment</title>
+<style>
+:root{--bg:#0f1115;--panel:#171a21;--card:#232734;--text:#e8ecf3;--muted:#a7b0c0;--primary:#4da3ff;--ok:#37d67a}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}.wrap{max-width:1200px;margin:0 auto;padding:20px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.card{background:var(--panel);border:1px solid #2c3140;border-radius:12px;padding:12px}.row{background:var(--card);border:1px solid #2c3140;border-radius:8px;padding:8px;margin-top:8px}
+button{border:0;border-radius:8px;padding:10px 12px;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--ok));color:#091018;cursor:pointer}
+.small{font-size:13px;color:var(--muted)}
+</style></head><body><div class="wrap"><h1>Show Assignment Prototype</h1>
+<div class="grid"><section class="card"><h3>Roster Pool</h3><div id="pool"></div><button id="assign">Assign to Weekly Show</button></section>
+<section class="card"><h3>Assignment Report</h3><div id="report" class="small">Run assignment.</div></section></div></div>
+<script>
+const roster=[
+{id:'fa_rook_steel',name:'Rook Steel',align:'face',style:'powerhouse',draw:42,crowd:48},
+{id:'fa_nova_blaze',name:'Nova Blaze',align:'heel',style:'high_flyer',draw:61,crowd:67},
+{id:'fa_mara_voss',name:'Mara Voss',align:'tweener',style:'technical',draw:57,crowd:59},
+{id:'fa_onyx_drift',name:'Onyx Drift',align:'face',style:'technical',draw:65,crowd:62},
+{id:'fa_riptide_king',name:'Riptide King',align:'heel',style:'powerhouse',draw:53,crowd:51},
+{id:'fa_luna_strike',name:'Luna Strike',align:'face',style:'high_flyer',draw:59,crowd:63}
+];
+const pool=document.getElementById('pool');
+function renderPool(){ pool.innerHTML=''; roster.forEach(r=>{const d=document.createElement('div');d.className='row';d.innerHTML=`<strong>${r.name}</strong> (${r.align}, ${r.style})<br><span class='small'>Draw ${r.draw} • Crowd ${r.crowd}</span>`;pool.appendChild(d);}); }
+function assign(){
+ const picked=[...roster].sort((a,b)=>(b.draw*0.6+b.crowd*0.4)-(a.draw*0.6+a.crowd*0.4)).slice(0,6);
+ const styles={}; let face=0,heel=0,totalDraw=0;
+ picked.forEach(p=>{styles[p.style]=(styles[p.style]||0)+1; if(p.align==='face')face++; if(p.align==='heel')heel++; totalDraw+=p.draw;});
+ const maxStyle=Math.max(...Object.values(styles));
+ const styleCohesion=(maxStyle/picked.length*100).toFixed(2);
+ const balance=((1-Math.abs(face-heel)/picked.length)*100).toFixed(2);
+ const drawScore=(totalDraw/picked.length).toFixed(2);
+ document.getElementById('report').innerHTML=`
+  Assigned: ${picked.map(p=>p.name).join(', ')}<br><br>
+  Style Cohesion: ${styleCohesion}<br>
+  Heel/Face Balance: ${balance}<br>
+  Average Draw Score: ${drawScore}
+ `;
+}
+document.getElementById('assign').addEventListener('click',assign);renderPool();
+</script></body></html>

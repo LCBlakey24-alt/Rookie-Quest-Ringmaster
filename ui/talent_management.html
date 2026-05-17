@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Ringmaster — Talent Management</title>
+<style>
+:root{--bg:#0f1115;--panel:#171a21;--card:#232734;--text:#e8ecf3;--muted:#a7b0c0;--primary:#4da3ff;--ok:#37d67a}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}.wrap{max-width:1300px;margin:0 auto;padding:20px}
+.grid{display:grid;grid-template-columns:1.2fr .8fr;gap:12px}.card{background:var(--panel);border:1px solid #2c3140;border-radius:12px;padding:12px}
+.t{background:var(--card);border:1px solid #2c3140;border-radius:8px;padding:8px;margin-top:8px}.muted{color:var(--muted);font-size:13px}
+select,input{width:100%;margin-top:6px;padding:10px;border-radius:8px;border:1px solid #2c3140;background:#0f131c;color:var(--text)}
+button{margin-top:10px;border:0;border-radius:8px;padding:10px 12px;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--ok));color:#091018;cursor:pointer}
+</style></head><body><div class="wrap"><h1>Talent Management Prototype</h1>
+<div class="grid"><section class="card"><h3>Free Agents</h3><div id="list"></div></section>
+<section class="card"><h3>Training Lab</h3>
+<label>Wrestler<select id="w"></select></label>
+<label>Training Type<select id="type"><option>finisher</option><option>promo</option><option>safety</option></select></label>
+<label>Weeks<input id="weeks" type="number" min="1" max="12" value="4"></label>
+<label>Coach Skill<input id="skill" type="number" min="1" max="100" value="75"></label>
+<button id="run">Apply Training</button><div id="out" class="muted" style="margin-top:10px"></div></section></div></div>
+<script>
+const wrestlers=[
+{id:'fa_rook_steel',name:'Rook Steel',style:'powerhouse',align:'face',draw:42,crowd:48,danger:62,inj:38,hurt:44,promo:55,fin:'Steelbreaker',finPop:58,safety:56},
+{id:'fa_nova_blaze',name:'Nova Blaze',style:'high_flyer',align:'heel',draw:61,crowd:67,danger:71,inj:52,hurt:49,promo:70,fin:'Comet Crash',finPop:75,safety:58},
+{id:'fa_mara_voss',name:'Mara Voss',style:'technical',align:'tweener',draw:57,crowd:59,danger:40,inj:28,hurt:22,promo:63,fin:'Voss Lock',finPop:69,safety:83}
+];
+const list=document.getElementById('list'), sel=document.getElementById('w');
+function renderList(){
+ list.innerHTML=''; sel.innerHTML='';
+ wrestlers.forEach(w=>{
+  const d=document.createElement('div'); d.className='t';
+  d.innerHTML=`<strong>${w.name}</strong> (${w.align}, ${w.style})<br><span class='muted'>Draw ${w.draw} • Crowd ${w.crowd} • Dangerous ${w.danger} • Injury Prone ${w.inj} • Hurts Others Risk ${w.hurt}<br>Finisher: ${w.fin} (${w.finPop}) • Promo ${w.promo} • Safety ${w.safety}</span>`;
+  list.appendChild(d);
+  const o=document.createElement('option'); o.value=w.id; o.textContent=w.name; sel.appendChild(o);
+ });
+}
+function runTraining(){
+ const id=sel.value; const t=document.getElementById('type').value; const weeks=Number(document.getElementById('weeks').value||1); const skill=Number(document.getElementById('skill').value||1);
+ const w=wrestlers.find(x=>x.id===id); if(!w) return;
+ let gain=Math.max(1,Math.floor(skill/20)+Math.floor(weeks/2));
+ if(t==='finisher'){ w.finPop=Math.min(100,w.finPop+gain); }
+ if(t==='promo'){ w.promo=Math.min(100,w.promo+gain); }
+ if(t==='safety'){ w.safety=Math.min(100,w.safety+Math.max(1,Math.floor(skill/24)+Math.floor(weeks/3))); w.hurt=Math.max(0,w.hurt-Math.max(1,Math.floor(gain/2))); }
+ document.getElementById('out').textContent=`Training applied to ${w.name}.`;
+ renderList();
+}
+document.getElementById('run').addEventListener('click',runTraining); renderList();
+</script></body></html>
