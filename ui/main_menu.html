@@ -31,22 +31,11 @@
     <section class="grid">
       <article class="card">
         <h2>Career</h2>
-        <div class="muted" style="margin-bottom:10px">Game Modes: Promoter / General Manager / Wrestler Career</div>
         <div class="btns">
           <button id="newCareer">New Career (Create Brand)</button>
           <button class="secondary" id="continueCareer">Continue Career (Load Save)</button>
           <button class="secondary" id="sandbox">Sandbox Universe</button>
           <button class="secondary" id="planner">Weekly Planner</button>
-          <button class="secondary" id="campaign">Campaign Dashboard</button>
-          <button class="secondary" id="booking">Booking Board</button>
-          <button class="secondary" id="resetCareer">Reset Career State</button>
-          <button class="secondary" id="staffOffice">Staff Office</button>
-          <button class="secondary" id="devCenter">Development Center</button>
-          <button class="secondary" id="rosterPipeline">Roster Pipeline</button>
-          <button class="secondary" id="talentMgmt">Talent Management</button>
-          <button class="secondary" id="showAssign">Show Assignment</button>
-          <button class="secondary" id="wrestlerCareer">Wrestler Career Mode</button>
-          <button class="secondary" id="dialogueHub">Dialogue Hub</button>
         </div>
         <div class="log" id="careerLog"></div>
       </article>
@@ -69,16 +58,6 @@
     document.getElementById('continueCareer').onclick = () => log('Continue selected: next step is file picker wired to savegame loader.');
     document.getElementById('sandbox').onclick = () => log('Sandbox selected: next step is custom rules and universe setup.');
     document.getElementById('planner').onclick = () => window.location.href='weekly_planner.html';
-    document.getElementById('campaign').onclick = () => window.location.href='campaign_dashboard.html';
-    document.getElementById('booking').onclick = () => window.location.href='booking_board.html';
-    document.getElementById('resetCareer').onclick = () => { localStorage.removeItem('ringmaster_week'); alert('Career week reset to 1'); };
-    document.getElementById('staffOffice').onclick = () => window.location.href='staff_office.html';
-    document.getElementById('devCenter').onclick = () => window.location.href='development_center.html';
-    document.getElementById('rosterPipeline').onclick = () => window.location.href='roster_pipeline.html';
-    document.getElementById('talentMgmt').onclick = () => window.location.href='talent_management.html';
-    document.getElementById('showAssign').onclick = () => window.location.href='show_assignment.html';
-    document.getElementById('wrestlerCareer').onclick = () => window.location.href='wrestler_career_mode.html';
-    document.getElementById('dialogueHub').onclick = () => window.location.href='dialogue_hub.html';
   </script>
 </body>
 </html>

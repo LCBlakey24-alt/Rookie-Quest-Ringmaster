@@ -95,7 +95,7 @@
           `;
           card.querySelector('button').onclick = () => {
             localStorage.setItem('ringmaster_selected_brand', b.id);
-            window.location.href='campaign_dashboard.html';
+            alert(`Selected ${b.name}. Next step: load campaign dashboard.`);
           };
           grid.appendChild(card);
         });
