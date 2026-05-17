@@ -1,0 +1,35 @@
+{
+  "id": "rhea_vale",
+  "ringName": "Rhea Vale",
+  "realName": "Rhiannon Vale",
+  "age": 33,
+  "alignment": "heel",
+  "styles": ["technical", "powerhouse"],
+  "attributes": {
+    "technique": 86,
+    "psychology": 84,
+    "stamina": 71,
+    "athleticism": 67,
+    "safety": 90
+  },
+  "promo": {
+    "charisma": 79,
+    "delivery": 88,
+    "authenticity": 82
+  },
+  "personality": {
+    "discipline": 89,
+    "ego": 72,
+    "loyalty": 54,
+    "professionalism": 91
+  },
+  "health": {
+    "fatigue": 18,
+    "injuryProneness": 24
+  },
+  "popularity": {
+    "home": 58,
+    "national": 64,
+    "international": 47
+  }
+}

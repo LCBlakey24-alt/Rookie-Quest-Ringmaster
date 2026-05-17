@@ -1,0 +1,35 @@
+{
+  "id": "jax_storm",
+  "ringName": "Jax Storm",
+  "realName": "Jason Ortega",
+  "age": 29,
+  "alignment": "face",
+  "styles": ["high_flyer", "entertainer"],
+  "attributes": {
+    "technique": 74,
+    "psychology": 69,
+    "stamina": 83,
+    "athleticism": 88,
+    "safety": 72
+  },
+  "promo": {
+    "charisma": 81,
+    "delivery": 77,
+    "authenticity": 73
+  },
+  "personality": {
+    "discipline": 70,
+    "ego": 38,
+    "loyalty": 66,
+    "professionalism": 75
+  },
+  "health": {
+    "fatigue": 22,
+    "injuryProneness": 41
+  },
+  "popularity": {
+    "home": 63,
+    "national": 49,
+    "international": 34
+  }
+}
