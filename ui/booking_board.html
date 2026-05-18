@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ringmaster — Booking Board</title>
+  <style>
+    :root { --bg:#0f1115; --panel:#171a21; --card:#232734; --text:#e8ecf3; --muted:#a7b0c0; --primary:#2f7cff; --secondary:#ff2448; --line:rgba(255,255,255,.12); --warn:#ffb020; }
+    body { margin:0; background: radial-gradient(circle at top right,#101728 0,var(--bg) 45%), var(--bg); color:var(--text); font-family:Inter,Arial,sans-serif; }
+    .wrap { max-width:1200px; margin:0 auto; padding:22px; }
+    .row { display:grid; grid-template-columns: 1fr 320px; gap:12px; }
+    .card { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:12px; position:relative; overflow:hidden; }
+    .card::before{content:"";position:absolute;left:0;top:0;width:100%;height:2px;background:linear-gradient(90deg,var(--secondary),var(--primary));opacity:.9;}
+    .seg { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:10px; margin-top:8px; display:flex; justify-content:space-between; align-items:center; }
+    button { border:0; border-radius:8px; padding:8px 10px; font-weight:700; cursor:pointer; background:linear-gradient(135deg,var(--primary),var(--secondary)); color:#091018; }
+    .muted { color:var(--muted); font-size:13px; }
+    .warn { color:var(--warn); font-size:13px; margin-top:6px; }
+    input { width:100%; margin-top:8px; padding:10px; border-radius:8px; border:1px solid var(--line); background:#0a0d14; color:var(--text); }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Booking Board Prototype</h1>
+  <div class="row">
+    <section class="card">
+      <div class="muted">Drag/drop coming next — for now use Move Up/Down controls.</div>
+      <div id="segments"></div>
+    </section>
+    <section class="card">
+      <h3 style="margin:0">Add Segment</h3>
+      <input id="name" placeholder="Segment name" value="Main Event" />
+      <input id="mins" type="number" min="1" placeholder="Minutes" value="18" />
+      <button id="add">Add Segment</button>
+      <div class="muted" id="runtime" style="margin-top:12px"></div>
+      <div id="warnings"></div>
+    </section>
+  </div>
+</div>
+<script>
+  const segments = [
+    {name:'Opening Promo', mins:10},
+    {name:'Tag Match', mins:16},
+    {name:'Main Event', mins:22}
+  ];
+
+  const segEl = document.getElementById('segments');
+  const runtimeEl = document.getElementById('runtime');
+  const warnEl = document.getElementById('warnings');
+
+  function warnings(list){
+    const total = list.reduce((a,s)=>a+s.mins,0);
+    const out=[];
+    for(let i=1;i<list.length;i++){
+      if(list[i-1].mins>=20 && list[i].mins>=20){ out.push('Two or more long segments back-to-back may hurt crowd pacing'); break; }
+    }
+    if(total<60) out.push('Card runtime is short; audience may feel under-served');
+    if(total>180) out.push('Card runtime is very long; fatigue risk increased');
+    return out;
+  }
+
+  function render(){
+    segEl.innerHTML='';
+    segments.forEach((s,idx)=>{
+      const d=document.createElement('div'); d.className='seg';
+      d.innerHTML=`<div><strong>${idx+1}. ${s.name}</strong><div class='muted'>${s.mins} mins</div></div><div><button data-up='${idx}'>↑</button> <button data-down='${idx}'>↓</button></div>`;
+      segEl.appendChild(d);
+    });
+    const total = segments.reduce((a,s)=>a+s.mins,0);
+    runtimeEl.textContent = `Total runtime: ${total} minutes`;
+    warnEl.innerHTML = warnings(segments).map(w=>`<div class='warn'>⚠ ${w}</div>`).join('');
+
+    segEl.querySelectorAll('button[data-up]').forEach(b=>b.onclick=()=>{const i=Number(b.dataset.up); if(i>0){[segments[i-1],segments[i]]=[segments[i],segments[i-1]]; render();}});
+    segEl.querySelectorAll('button[data-down]').forEach(b=>b.onclick=()=>{const i=Number(b.dataset.down); if(i<segments.length-1){[segments[i+1],segments[i]]=[segments[i],segments[i+1]]; render();}});
+  }
+
+  document.getElementById('add').onclick=()=>{
+    const name=document.getElementById('name').value.trim()||'Unnamed Segment';
+    const mins=Math.max(1, Number(document.getElementById('mins').value||10));
+    segments.push({name, mins});
+    render();
+  };
+
+  render();
+</script>
+</body>
+</html>

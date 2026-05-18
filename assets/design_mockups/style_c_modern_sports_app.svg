@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+<rect width="1600" height="900" fill="#EDF1F7"/>
+<rect x="20" y="20" width="1560" height="70" rx="12" fill="#FFFFFF" stroke="#D4DCE8"/>
+<text x="40" y="64" fill="#1D2A3A" font-size="28" font-family="Arial" font-weight="700">RINGMASTER — MODERN SPORTS APP</text>
+<rect x="20" y="110" width="500" height="210" rx="12" fill="#FFFFFF" stroke="#D4DCE8"/>
+<rect x="540" y="110" width="500" height="210" rx="12" fill="#FFFFFF" stroke="#D4DCE8"/>
+<rect x="1060" y="110" width="520" height="210" rx="12" fill="#FFFFFF" stroke="#D4DCE8"/>
+<text x="40" y="150" fill="#6B7A90" font-size="20" font-family="Arial">Audience</text><text x="40" y="225" fill="#1D2A3A" font-size="54" font-family="Arial">1.24M</text>
+<text x="560" y="150" fill="#6B7A90" font-size="20" font-family="Arial">Revenue</text><text x="560" y="225" fill="#1D2A3A" font-size="54" font-family="Arial">$422k</text>
+<text x="1080" y="150" fill="#6B7A90" font-size="20" font-family="Arial">Rank</text><text x="1080" y="225" fill="#1D2A3A" font-size="54" font-family="Arial">#11</text>
+<rect x="20" y="350" width="1560" height="530" rx="12" fill="#FFFFFF" stroke="#D4DCE8"/>
+<text x="40" y="395" fill="#1D2A3A" font-size="30" font-family="Arial" font-weight="700">Roster Intelligence</text>
+<text x="40" y="850" fill="#6B7A90" font-size="20" font-family="Arial">Style C: Modern Sports App (high readability / console-safe)</text>
+</svg>

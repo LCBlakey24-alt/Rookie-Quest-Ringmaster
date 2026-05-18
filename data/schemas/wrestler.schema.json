@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rookiequestringmaster.dev/schemas/wrestler.schema.json",
+  "title": "Wrestler",
+  "type": "object",
+  "required": [
+    "id",
+    "ringName",
+    "age",
+    "alignment",
+    "attributes",
+    "promo",
+    "personality",
+    "health",
+    "popularity"
+  ],
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z0-9_\\-]+$" },
+    "ringName": { "type": "string", "minLength": 1 },
+    "realName": { "type": "string" },
+    "age": { "type": "integer", "minimum": 16, "maximum": 80 },
+    "alignment": { "type": "string", "enum": ["face", "heel", "tweener"] },
+    "styles": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["technical", "brawler", "high_flyer", "powerhouse", "hardcore", "entertainer"]
+      },
+      "uniqueItems": true
+    },
+    "attributes": {
+      "type": "object",
+      "required": ["technique", "psychology", "stamina", "athleticism", "safety"],
+      "properties": {
+        "technique": { "type": "integer", "minimum": 1, "maximum": 100 },
+        "psychology": { "type": "integer", "minimum": 1, "maximum": 100 },
+        "stamina": { "type": "integer", "minimum": 1, "maximum": 100 },
+        "athleticism": { "type": "integer", "minimum": 1, "maximum": 100 },
+        "safety": { "type": "integer", "minimum": 1, "maximum": 100 }
+      },
+      "additionalProperties": false
+    },
+    "promo": {
+      "type": "object",
+      "required": ["charisma", "delivery", "authenticity"],
+      "properties": {
+        "charisma": { "type": "integer", "minimum": 1, "maximum": 100 },
+        "delivery": { "type": "integer", "minimum": 1, "maximum": 100 },
+        "authenticity": { "type": "integer", "minimum": 1, "maximum": 100 }
+      },
+      "additionalProperties": false
+    },
+    "personality": {
+      "type": "object",
+      "required": ["discipline", "ego", "loyalty", "professionalism"],
+      "properties": {
+        "discipline": { "type": "integer", "minimum": 1, "maximum": 100 },
+        "ego": { "type": "integer", "minimum": 1, "maximum": 100 },
+        "loyalty": { "type": "integer", "minimum": 1, "maximum": 100 },
+        "professionalism": { "type": "integer", "minimum": 1, "maximum": 100 }
+      },
+      "additionalProperties": false
+    },
+    "health": {
+      "type": "object",
+      "required": ["fatigue", "injuryProneness"],
+      "properties": {
+        "fatigue": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "injuryProneness": { "type": "integer", "minimum": 1, "maximum": 100 }
+      },
+      "additionalProperties": false
+    },
+    "popularity": {
+      "type": "object",
+      "required": ["home", "national", "international"],
+      "properties": {
+        "home": { "type": "integer", "minimum": 1, "maximum": 100 },
+        "national": { "type": "integer", "minimum": 1, "maximum": 100 },
+        "international": { "type": "integer", "minimum": 1, "maximum": 100 }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

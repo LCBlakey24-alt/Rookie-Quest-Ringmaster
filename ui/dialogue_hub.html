@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Ringmaster — Dialogue Hub</title>
+<style>
+:root{--bg:#050507;--panel:#0d0f14;--card:#121520;--text:#e8ecf3;--muted:#9aa4b6;--primary:#2f7cff;--secondary:#ff2448;--line:rgba(255,255,255,.12)}
+body{margin:0;background:radial-gradient(circle at top right,#101728 0,var(--bg) 45%),var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}.wrap{max-width:1100px;margin:0 auto;padding:20px}
+.top{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;position:relative;overflow:hidden;margin-bottom:12px}.top::before,.card::before{content:"";position:absolute;left:0;top:0;width:100%;height:2px;background:linear-gradient(90deg,var(--secondary),var(--primary));}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;position:relative;overflow:hidden}
+button{border:0;border-radius:8px;padding:10px 12px;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#091018;cursor:pointer}
+textarea,select,input{width:100%;margin-top:8px;padding:10px;border-radius:8px;border:1px solid var(--line);background:#0a0d14;color:var(--text)}
+.k{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px;margin-top:8px}.small{font-size:13px;color:var(--muted)}
+</style></head><body><div class="wrap"><section class="top"><h1 style="margin:0">Dialogue Hub Prototype</h1>
+<div id="sub" class="small">Includes preset options + freeform AI-style reply input.</div></section>
+<div class="grid"><section class="card"><h3>Incoming Message</h3>
+<label>Sender<select id="sender"><option>Head Writer</option><option>Top Star</option><option>Technical Director</option></select></label>
+<label>Topic<input id="topic" value="tonight's main event"/></label>
+<label>Urgency (0-100)<input id="urgency" type="number" min="0" max="100" value="60"/></label>
+<label>Preset Responses<select id="preset"><option>Thanks, let's do it.</option><option>Not now, we'll discuss later.</option><option>I disagree with this plan.</option></select></label>
+<label>Freeform Response (Option 4)</label>
+<textarea id="freeform" rows="5" placeholder="Type exactly what you want to say..."></textarea>
+<button id="send">Send Response</button> <button id="savePrefs">Save Dialogue Prefs</button></section>
+<section class="card"><h3>Conversation Result</h3><div id="out" class="small">Awaiting response...</div></section></div></div>
+<script>
+function evaluate(text, urgency){
+ const t=text.toLowerCase();
+ let rel=0, stress=0;
+ const pos=['thanks','appreciate','great','happy','yes','agree'];
+ const neg=['no','never','useless','hate','angry','ridiculous'];
+ const res=['please','understand','sorry','respect'];
+ const dem=['must','immediately','do it','now'];
+ if(pos.some(k=>t.includes(k))){rel+=4;stress-=1}
+ if(res.some(k=>t.includes(k))) rel+=2;
+ if(neg.some(k=>t.includes(k))){rel-=5;stress+=2}
+ if(dem.some(k=>t.includes(k))){rel-=2;stress+=2}
+ if(urgency>70 && t.includes('later')){rel-=3;stress+=2}
+ let reply='Understood. I\'ll proceed with the current plan.';
+ if(rel>=4) reply='I hear you. We\'ll align and move forward together.';
+ if(rel<=-4) reply='I don\'t like how this is being handled. We need to revisit this.';
+ return {rel:Math.max(-10,Math.min(10,rel)),stress:Math.max(-5,Math.min(8,stress)),reply};
+}
+function loadProfile(){
+ const raw=localStorage.getItem('ringmaster_brand_profile');
+ if(!raw) return;
+ try{const p=JSON.parse(raw); if(p.brand_name) document.getElementById('sub').textContent=`Dialogue planning for ${p.brand_name} (${p.country||'US'})`; if(p.dialogue_sender) document.getElementById('sender').value=p.dialogue_sender; if(p.dialogue_topic) document.getElementById('topic').value=p.dialogue_topic;}catch{}
+}
+function savePrefs(){
+ const raw=localStorage.getItem('ringmaster_brand_profile');
+ const p=raw?JSON.parse(raw):{};
+ p.dialogue_sender=document.getElementById('sender').value;
+ p.dialogue_topic=document.getElementById('topic').value;
+ p.dialogue_urgency=Number(document.getElementById('urgency').value||60);
+ localStorage.setItem('ringmaster_brand_profile',JSON.stringify(p));
+}
+document.getElementById('send').onclick=()=>{
+ const sender=document.getElementById('sender').value;
+ const topic=document.getElementById('topic').value;
+ const urgency=Number(document.getElementById('urgency').value||0);
+ const preset=document.getElementById('preset').value;
+ const free=document.getElementById('freeform').value.trim();
+ const msg=free || preset;
+ const out=evaluate(msg, urgency);
+ document.getElementById('out').innerHTML=`
+  <div class='k'><strong>You said:</strong> ${msg}</div>
+  <div class='k'><strong>${sender} replies:</strong> ${sender}: ${out.reply} (${topic})</div>
+  <div class='k'><strong>Relationship delta:</strong> ${out.rel}</div>
+  <div class='k'><strong>Stress delta:</strong> ${out.stress}</div>
+ `;
+};
+document.getElementById('savePrefs').addEventListener('click',savePrefs);
+loadProfile();
+</script></body></html>

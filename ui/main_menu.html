@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Rookie Quest: Ringmaster — Main Menu</title>
+  <style>
+    :root { --bg:#050507; --panel:#0d0f14; --card:#121520; --text:#e8ecf3; --muted:#9aa4b6; --red:#ff2448; --blue:#2f7cff; --line:rgba(255,255,255,.12);} 
+    body { margin:0; font-family: Inter, Arial, sans-serif; background: radial-gradient(circle at top right,#101728 0,var(--bg) 42%), var(--bg); color: var(--text); }
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 24px; }
+    .header { background: linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,0)); border:1px solid var(--line); border-radius: 14px; padding: 16px 20px; position:relative; overflow:hidden; }
+    .header::before{content:'';position:absolute;left:0;top:0;height:2px;width:100%;background:linear-gradient(90deg,var(--red),var(--blue));}
+    .title { margin: 0; font-size: 34px; }
+    .sub { margin: 6px 0 0; color: var(--muted); }
+    .grid { margin-top: 16px; display:grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .card { background: var(--panel); border:1px solid var(--line); border-radius: 14px; padding: 16px; position:relative; }
+    .card::before{content:'';position:absolute;left:0;top:0;width:4px;height:100%;background:linear-gradient(180deg,var(--red),var(--blue));opacity:.85;}
+    .card h2 { margin:0 0 10px; font-size: 20px; color: #dce8ff; letter-spacing:.03em; }
+    .btns { display:grid; gap:10px; }
+    button { background: linear-gradient(135deg,var(--red),var(--blue)); border:0; color:#091018; font-weight:700; padding: 12px 14px; border-radius:10px; cursor:pointer; }
+    button.secondary { background: var(--card); color: var(--text); border:1px solid var(--line); }
+    .log { margin-top: 10px; font-size: 14px; color: var(--muted); min-height: 22px; }
+    ul { margin: 0; padding-left: 18px; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="header">
+      <h1 class="title">Rookie Quest: Ringmaster</h1>
+      <p class="sub">Main Menu Prototype — choose a brand or create your own path to world domination.</p>
+    </section>
+
+    <section class="grid">
+      <article class="card">
+        <h2>Career</h2>
+        <div class="muted" style="margin-bottom:10px">Game Modes: Promoter / General Manager / Wrestler Career</div>
+        <div class="btns">
+          <button id="newCareer">New Career (Create Brand)</button>
+          <button class="secondary" id="continueCareer">Continue Career (Load Save)</button>
+          <button class="secondary" id="sandbox">Sandbox Universe</button>
+          <button class="secondary" id="planner">Weekly Planner</button>
+          <button class="secondary" id="campaign">Campaign Dashboard</button>
+          <button class="secondary" id="booking">Booking Board</button>
+          <button class="secondary" id="resetCareer">Reset Career State</button>
+          <button class="secondary" id="staffOffice">Staff Office</button>
+          <button class="secondary" id="devCenter">Development Center</button>
+          <button class="secondary" id="rosterPipeline">Roster Pipeline</button>
+          <button class="secondary" id="talentMgmt">Talent Management</button>
+          <button class="secondary" id="showAssign">Show Assignment</button>
+          <button class="secondary" id="wrestlerCareer">Wrestler Career Mode</button>
+          <button class="secondary" id="dialogueHub">Dialogue Hub</button>
+        </div>
+        <div class="log" id="careerLog"></div>
+      </article>
+
+      <article class="card">
+        <h2>Global Leagues Snapshot</h2>
+        <ul>
+          <li>20+ country-based promotions seeded</li>
+          <li>Weekly + special event structure per brand</li>
+          <li>World ranking and market-share campaign progression</li>
+          <li>Contracts, morale, storyline, and finance systems active</li>
+        </ul>
+      </article>
+    </section>
+  </div>
+
+  <script>
+    const log = (msg) => document.getElementById('careerLog').textContent = msg;
+    document.getElementById('newCareer').onclick = () => window.location.href='brand_creator.html';
+    document.getElementById('continueCareer').onclick = () => log('Continue selected: next step is file picker wired to savegame loader.');
+    document.getElementById('sandbox').onclick = () => log('Sandbox selected: next step is custom rules and universe setup.');
+    document.getElementById('planner').onclick = () => window.location.href='weekly_planner.html';
+    document.getElementById('campaign').onclick = () => window.location.href='campaign_dashboard.html';
+    document.getElementById('booking').onclick = () => window.location.href='booking_board.html';
+    document.getElementById('resetCareer').onclick = () => { localStorage.removeItem('ringmaster_week'); alert('Career week reset to 1'); };
+    document.getElementById('staffOffice').onclick = () => window.location.href='staff_office.html';
+    document.getElementById('devCenter').onclick = () => window.location.href='development_center.html';
+    document.getElementById('rosterPipeline').onclick = () => window.location.href='roster_pipeline.html';
+    document.getElementById('talentMgmt').onclick = () => window.location.href='talent_management.html';
+    document.getElementById('showAssign').onclick = () => window.location.href='show_assignment.html';
+    document.getElementById('wrestlerCareer').onclick = () => window.location.href='wrestler_career_mode.html';
+    document.getElementById('dialogueHub').onclick = () => window.location.href='dialogue_hub.html';
+  </script>
+</body>
+</html>

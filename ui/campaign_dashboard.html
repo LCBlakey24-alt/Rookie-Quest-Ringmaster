@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ringmaster — Campaign Dashboard</title>
+  <style>
+    :root { --bg:#0f1115; --panel:#171a21; --card:#232734; --text:#e8ecf3; --muted:#a7b0c0; --primary:#2f7cff; --secondary:#ff2448; --line:rgba(255,255,255,.12); --warn:#ffb020; }
+    body { margin:0; font-family: Inter, Arial, sans-serif; background: radial-gradient(circle at top right,#101728 0,var(--bg) 45%), var(--bg); color:var(--text); }
+    .wrap { max-width:1300px; margin:0 auto; padding:20px; }
+    .top { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:14px; display:flex; justify-content:space-between; align-items:center; position:relative; overflow:hidden;}
+    .top::before{content:"";position:absolute;left:0;top:0;width:100%;height:2px;background:linear-gradient(90deg,var(--secondary),var(--primary));}
+    .title { font-size:30px; margin:0; }
+    .small { color:var(--muted); font-size:14px; }
+    .grid { display:grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap:12px; margin-top:12px; }
+    .kpi { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:12px; }
+    .kpi .v { font-size:26px; font-weight:800; }
+    .main { display:grid; grid-template-columns: 1.2fr 1fr; gap:12px; margin-top:12px; }
+    .card { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:12px; position:relative; overflow:hidden; }
+    .card::before{content:"";position:absolute;left:0;top:0;width:100%;height:2px;background:linear-gradient(90deg,var(--secondary),var(--primary));opacity:.9;}
+    .story { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:8px; margin-top:8px; }
+    button { border:0; border-radius:8px; padding:10px 12px; font-weight:700; cursor:pointer; background:linear-gradient(135deg,var(--primary),var(--secondary)); color:#091018; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <section class="top">
+    <div>
+      <h1 class="title" id="brandTitle">Player Created League</h1>
+      <div class="small" id="subtitle">Week 1 • Home US</div>
+    </div>
+    <div>
+      <button onclick="window.location.href='weekly_planner.html'">Open Weekly Planner</button>
+      <button id="advanceWeek" style="margin-left:8px">Advance Week</button>
+    </div>
+  </section>
+
+  <section class="grid">
+    <div class="kpi"><div class="small">World Rank</div><div class="v" id="rank">#21</div></div>
+    <div class="kpi"><div class="small">Market Share</div><div class="v" id="share">2.95%</div></div>
+    <div class="kpi"><div class="small">Cash</div><div class="v" id="cash">$500,000</div></div>
+    <div class="kpi"><div class="small">Domination Score</div><div class="v" id="dom">34.0</div></div>
+  </section>
+
+  <section class="main">
+    <article class="card">
+      <h2 style="margin:0">Top Storylines</h2>
+      <div class="story">Neon Collision Feud — Heat 88</div>
+      <div class="story">Crimson Crown Conflict — Heat 75</div>
+      <div class="story">Atlas Alliance Split — Heat 60</div>
+    </article>
+    <article class="card">
+      <h2 style="margin:0">Risk Monitor</h2>
+      <div class="small" id="cadence">Cadence penalty: 10.5 (Fan trust -3.68)</div>
+      <div class="small" id="entrance" style="margin-top:8px; color:var(--warn)">Entrance risk: Underfunded top star</div>
+      <div class="small" style="margin-top:12px;">Tip: reduce weekly shows or PPVs before scaling to avoid trust collapse.</div>
+    </article>
+  </section>
+
+  <section class="card" style="margin-top:12px">
+    <h2 style="margin:0">Backstage Events</h2>
+    <div id="eventsList" class="small" style="margin-top:8px"></div>
+  </section>
+</div>
+<script>
+  const profileRaw = localStorage.getItem('ringmaster_brand_profile');
+  if (profileRaw) {
+    try {
+      const p = JSON.parse(profileRaw);
+      document.getElementById('brandTitle').textContent = p.brand_name || 'Player Created League';
+      document.getElementById('subtitle').textContent = `Week 1 • Home ${p.country || 'US'}`;
+      if (p.starting_cash) document.getElementById('cash').textContent = `$${Number(p.starting_cash).toLocaleString()}`;
+      if (p.weekly_shows || p.monthly_ppvs) {
+        const ws = Number(p.weekly_shows || 2), ppv = Number(p.monthly_ppvs || 1);
+        const workload = ws > 3 ? (ws - 3) * 4.5 : 0;
+        const sat = ppv > 1 ? (ppv - 1) * 6.0 : 0;
+        const total = workload + sat;
+        const trust = -(total * 0.35).toFixed(2);
+        document.getElementById('cadence').textContent = `Cadence penalty: ${total.toFixed(2)} (Fan trust ${trust})`;
+      }
+      if (p.top_star_demand && p.ppv_entrance_budget) {
+        const d = Number(p.top_star_demand), b = Number(p.ppv_entrance_budget);
+        document.getElementById('entrance').textContent = b < d ? 'Entrance risk: Underfunded top star demand' : 'Entrance risk: Controlled';
+      }
+    } catch {}
+  }
+
+  const weekKey = 'ringmaster_week';
+  const rankEl = document.getElementById('rank');
+  const shareEl = document.getElementById('share');
+  const domEl = document.getElementById('dom');
+  const subtitle = document.getElementById('subtitle');
+
+  let week = Number(localStorage.getItem(weekKey) || 1);
+  function setWeekUI() {
+    subtitle.textContent = subtitle.textContent.replace(/Week \d+/, `Week ${week}`);
+  }
+  setWeekUI();
+
+  document.getElementById('advanceWeek').addEventListener('click', () => {
+    week += 1;
+    localStorage.setItem(weekKey, String(week));
+
+    const currentRank = Number(rankEl.textContent.replace('#',''));
+    if (currentRank > 1 && Math.random() > 0.45) rankEl.textContent = `#${currentRank - 1}`;
+
+    const share = Number(shareEl.textContent.replace('%',''));
+    shareEl.textContent = `${(share + 0.2).toFixed(2)}%`;
+
+    const dom = Number(domEl.textContent);
+    domEl.textContent = (dom + 1.4).toFixed(1);
+
+    setWeekUI();
+  });
+
+  function buildEvents() {
+    const ev = [];
+    const cadenceTxt = document.getElementById('cadence').textContent;
+    const entranceTxt = document.getElementById('entrance').textContent;
+    if (cadenceTxt.includes('penalty:') && !cadenceTxt.includes('penalty: 0.00')) {
+      ev.push('Fan Fatigue Concerns — audience says schedule intensity is too high.');
+    }
+    if (entranceTxt.includes('Underfunded')) {
+      ev.push('Top Star Entrance Dispute — production demand mismatch is affecting morale.');
+    }
+    if (!ev.length) ev.push('Locker Room Stable — no major incidents this week.');
+    document.getElementById('eventsList').innerHTML = ev.map(x => `• ${x}`).join('<br/>');
+  }
+  buildEvents();
+
+  const oldAdvance = document.getElementById('advanceWeek').onclick;
+  document.getElementById('advanceWeek').addEventListener('click', () => {
+    buildEvents();
+  });
+</script>
+</body>
+</html>
