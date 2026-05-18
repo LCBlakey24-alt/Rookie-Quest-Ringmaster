@@ -6,28 +6,27 @@
   <title>Rookie Quest: Ringmaster — Brand Creator</title>
   <style>
     :root {
-      --bg: #050507;
-      --panel: #0d0f14;
+      --bg: #0f1115;
+      --panel: #171a21;
       --text: #e8ecf3;
-      --muted: #9aa4b6;
-      --primary:#2f7cff;
-      --secondary:#ff2448;
-      --line: rgba(255,255,255,.12);
+      --muted: #a7b0c0;
+      --primary: #4da3ff;
+      --secondary: #37d67a;
     }
-    body { margin:0; font-family: Inter, Arial, sans-serif; background: radial-gradient(circle at top right,#101728 0,var(--bg) 45%), var(--bg); color: var(--text); }
+    body { margin:0; font-family: Inter, Arial, sans-serif; background: var(--bg); color: var(--text); }
     .wrap { max-width: 1250px; margin: 0 auto; padding: 24px; }
     .grid { display:grid; grid-template-columns: 430px 1fr; gap: 16px; }
-    .card { background: var(--panel); border:1px solid var(--line); border-radius: 14px; padding: 16px; }
+    .card { background: var(--panel); border:1px solid #2c3140; border-radius: 14px; padding: 16px; }
     h1,h2 { margin:0 0 12px; }
     label { display:block; font-size: 14px; color: var(--muted); margin-top: 12px; }
-    input, select { width:100%; margin-top:6px; padding:10px; border-radius:10px; border:1px solid var(--line); background:#0a0d14; color:var(--text); }
+    input, select { width:100%; margin-top:6px; padding:10px; border-radius:10px; border:1px solid #2c3140; background:#0f131c; color:var(--text); }
     .row { display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
     button { margin-top: 14px; width:100%; border:0; border-radius:10px; padding:12px; font-weight:700; color:#091018; background: linear-gradient(135deg,var(--primary),var(--secondary)); cursor:pointer; }
 
     .preview {
       min-height: 620px;
       border-radius: 14px;
-      border: 1px solid var(--line);
+      border: 1px solid #2c3140;
       background: radial-gradient(circle at 20% 20%, color-mix(in oklab, var(--primary) 25%, #0f1115), #0f1115 45%);
       overflow: hidden;
     }
@@ -36,10 +35,10 @@
     .hero .title { font-size: 30px; font-weight: 900; line-height: 1; }
     .hero .sub { font-size: 13px; font-weight: 600; opacity:.8; }
     .body { padding: 16px; display:grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .panel { background: #171a21cc; border:1px solid var(--line); border-radius:12px; padding: 12px; }
+    .panel { background: #171a21cc; border:1px solid #2c3140; border-radius:12px; padding: 12px; }
     .panel h3 { margin:0 0 8px; font-size:16px; color: var(--primary); }
     .small { color: var(--muted); font-size: 13px; }
-    .tag { display:inline-block; padding:3px 9px; border-radius:999px; border:1px solid var(--line); color: var(--muted); font-size:12px; }
+    .tag { display:inline-block; padding:3px 9px; border-radius:999px; border:1px solid #2c3140; color: var(--muted); font-size:12px; }
     .line { height: 8px; background: #232734; border-radius: 99px; overflow:hidden; margin-top: 8px; }
     .line > span { display:block; height:100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); }
   </style>
@@ -116,7 +115,7 @@
         <div class="body">
           <article class="panel">
             <h3 id="showTitle">Saturday Clashline</h3>
-            <img id="showLogoPreview" alt="show logo" src="../assets/branding/ringmaster_logo.svg" style="width:100%;max-height:120px;object-fit:cover;border-radius:8px;border:1px solid var(--line);background:#fff;" />
+            <img id="showLogoPreview" alt="show logo" src="../assets/branding/ringmaster_logo.svg" style="width:100%;max-height:120px;object-fit:cover;border-radius:8px;border:1px solid #2c3140;background:#fff;" />
             <div class="small" style="margin-top:8px;">Flagship show branding and identity block.</div>
           </article>
           <article class="panel">

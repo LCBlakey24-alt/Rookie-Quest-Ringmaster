@@ -2,21 +2,19 @@
 <html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Ringmaster — Wrestler Career Mode</title>
 <style>
-:root{--bg:#050507;--panel:#0d0f14;--card:#121520;--text:#e8ecf3;--muted:#9aa4b6;--ok:#67e8a5;--warn:#ffb020;--bad:#ff5c5c;--primary:#2f7cff;--secondary:#ff2448;--line:rgba(255,255,255,.12)}
-body{margin:0;background:radial-gradient(circle at top right,#101728 0,var(--bg) 45%),var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}.wrap{max-width:1200px;margin:0 auto;padding:20px}
-.top{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;position:relative;overflow:hidden;margin-bottom:12px}.top::before,.card::before{content:"";position:absolute;left:0;top:0;width:100%;height:2px;background:linear-gradient(90deg,var(--secondary),var(--primary));}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;position:relative;overflow:hidden}
-.k{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px;margin-top:8px}
-button{border:0;border-radius:8px;padding:10px 12px;margin-top:8px;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#091018;cursor:pointer}
+:root{--bg:#0f1115;--panel:#171a21;--card:#232734;--text:#e8ecf3;--muted:#a7b0c0;--ok:#37d67a;--warn:#ffb020;--bad:#ff5c5c;--primary:#4da3ff}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}.wrap{max-width:1200px;margin:0 auto;padding:20px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.card{background:var(--panel);border:1px solid #2c3140;border-radius:12px;padding:12px}
+.k{background:var(--card);border:1px solid #2c3140;border-radius:8px;padding:8px;margin-top:8px}
+button{border:0;border-radius:8px;padding:10px 12px;margin-top:8px;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--ok));color:#091018;cursor:pointer}
 .small{font-size:13px;color:var(--muted)}
-</style></head><body><div class="wrap"><section class="top"><h1 style="margin:0">Wrestler Career Mode Prototype</h1><div id="sub" class="small">Single-wrestler progression decisions with tradeoffs.</div></section>
+</style></head><body><div class="wrap"><h1>Wrestler Career Mode Prototype</h1>
 <div class="grid"><section class="card"><h3>Career Actions</h3>
 <button id="exclusive">Sign Exclusive Contract</button>
 <button id="optionalSkip">Skip Optional Indy Show (Date Night)</button>
 <button id="mandatorySkip">Skip Mandatory Mega Show</button>
 <button id="safeSpot">In-Match: Choose Safe Sequence</button>
 <button id="riskySpot">In-Match: Choose Risky Spot</button>
-<button id="saveState">Save Career State</button>
 <div class="small" id="note" style="margin-top:10px">Choose an action.</div></section>
 <section class="card"><h3>Career State</h3><div id="state"></div></section></div></div>
 <script>
@@ -24,7 +22,6 @@ let state={name:'Rook Steel',popularity:40,money:10000,morale:65,reliability:70,
 const note=document.getElementById('note');
 function render(){
  document.getElementById('state').innerHTML=`
-  <div class='k'>Wrestler: ${state.name}</div>
   <div class='k'>Popularity: ${state.popularity}</div>
   <div class='k'>Money: $${state.money.toLocaleString()}</div>
   <div class='k'>Morale: ${state.morale}</div>
@@ -33,28 +30,10 @@ function render(){
  `;
 }
 function clamp(v,min,max){return Math.max(min,Math.min(max,v));}
-function loadProfile(){
- const raw=localStorage.getItem('ringmaster_brand_profile');
- if(!raw) return;
- try {
-  const p=JSON.parse(raw);
-  if(p.brand_name) document.getElementById('sub').textContent=`Career run within ${p.brand_name} (${p.country||'US'})`;
-  if(p.wrestler_career_state) state={...state,...p.wrestler_career_state};
- } catch {}
-}
-function saveProfile(){
- const raw=localStorage.getItem('ringmaster_brand_profile');
- const p=raw?JSON.parse(raw):{};
- p.wrestler_career_state=state;
- localStorage.setItem('ringmaster_brand_profile',JSON.stringify(p));
- note.textContent='Career state saved to brand profile.';
-}
 document.getElementById('exclusive').onclick=()=>{state.popularity=clamp(state.popularity+4,0,100);state.money+=25000;state.morale=clamp(state.morale-3,0,100);state.reliability=clamp(state.reliability+5,0,100);note.textContent='Signed exclusive deal: more money/visibility, less morale freedom.';render();};
 document.getElementById('optionalSkip').onclick=()=>{state.popularity=clamp(state.popularity-1,0,100);state.morale=clamp(state.morale+2,0,100);state.reliability=clamp(state.reliability-3,0,100);note.textContent='Skipped optional booking: personal recovery, slight reputation cost.';render();};
 document.getElementById('mandatorySkip').onclick=()=>{state.popularity=clamp(state.popularity-6,0,100);state.money-=8000;state.reliability=clamp(state.reliability-15,0,100);note.textContent='Skipped mandatory mega show: severe reliability fallout.';render();};
 document.getElementById('safeSpot').onclick=()=>{state.popularity=clamp(state.popularity+1,0,100);state.reliability=clamp(state.reliability+1,0,100);note.textContent='Safe sequence chosen: consistent but lower pop.';render();};
 document.getElementById('riskySpot').onclick=()=>{state.popularity=clamp(state.popularity+3,0,100);state.morale=clamp(state.morale-1,0,100);state.injuries+=1;note.textContent='Risky spot chosen: bigger reaction, higher injury risk.';render();};
-document.getElementById('saveState').addEventListener('click',saveProfile);
-loadProfile();
 render();
 </script></body></html>

@@ -2,14 +2,13 @@
 <html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Ringmaster — Staff Office</title>
 <style>
-:root{--bg:#050507;--panel:#0d0f14;--card:#121520;--text:#e8ecf3;--muted:#9aa4b6;--primary:#2f7cff;--secondary:#ff2448;--line:rgba(255,255,255,.12)}
-body{margin:0;background:radial-gradient(circle at top right,#101728 0,var(--bg) 45%),var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}.wrap{max-width:1200px;margin:0 auto;padding:20px}
-.top{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;position:relative;overflow:hidden;margin-bottom:12px}.top::before,.card::before{content:"";position:absolute;left:0;top:0;width:100%;height:2px;background:linear-gradient(90deg,var(--secondary),var(--primary));}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;position:relative;overflow:hidden}
-select,input{width:100%;margin-top:6px;padding:10px;border-radius:8px;border:1px solid var(--line);background:#0a0d14;color:var(--text)}
-button{border:0;border-radius:8px;padding:10px 12px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#091018;margin-top:10px}
-.small{font-size:13px;color:var(--muted)} .kpi{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px;margin-top:8px}
-</style></head><body><div class="wrap"><section class="top"><h1 style="margin:0">Staff Office Prototype</h1><div id="sub" class="small">Evaluate staff synergy against your brand strategy.</div></section>
+:root{--bg:#0f1115;--panel:#171a21;--card:#232734;--text:#e8ecf3;--muted:#a7b0c0;--primary:#4da3ff;--ok:#37d67a;--warn:#ffb020}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}.wrap{max-width:1200px;margin:0 auto;padding:20px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.card{background:var(--panel);border:1px solid #2c3140;border-radius:12px;padding:12px}
+select,input{width:100%;margin-top:6px;padding:10px;border-radius:8px;border:1px solid #2c3140;background:#0f131c;color:var(--text)}
+button{border:0;border-radius:8px;padding:10px 12px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--primary),var(--ok));color:#091018;margin-top:10px}
+.small{font-size:13px;color:var(--muted)} .kpi{background:var(--card);border:1px solid #2c3140;border-radius:8px;padding:8px;margin-top:8px}
+</style></head><body><div class="wrap"><h1>Staff Office Prototype</h1>
 <div class="grid"><section class="card"><h3>Hire Setup</h3>
 <label>Core Style<select id="style"><option>sports_drama</option><option>cinematic</option><option>spectacle</option></select></label>
 <label>Budget<input id="budget" type="number" value="120000"/></label>
@@ -17,7 +16,7 @@ button{border:0;border-radius:8px;padding:10px 12px;font-weight:700;cursor:point
 <label>Technical Staff Skill<input id="technical" type="number" value="78"/></label>
 <label>Music Staff Skill<input id="music" type="number" value="88"/></label>
 <label>Music Style<select id="musicStyle"><option>cinematic</option><option>sports_drama</option><option>spectacle</option></select></label>
-<button id="eval">Evaluate Staff Synergy</button><button id="save">Save Staff Plan</button></section>
+<button id="eval">Evaluate Staff Synergy</button></section>
 <section class="card"><h3>Synergy Report</h3><div id="out" class="small">Run evaluation.</div></section></div></div>
 <script>
 function evalReport(){
@@ -39,7 +38,5 @@ function evalReport(){
   <div class='kpi'><strong>Net Weekly Effect: ${net}</strong></div>
  `;
 }
-function load(){const raw=localStorage.getItem('ringmaster_brand_profile');if(!raw) return; try{const p=JSON.parse(raw); if(p.brand_name) document.getElementById('sub').textContent=`Staff plan for ${p.brand_name} (${p.country||'US'})`; if(p.staff_budget) document.getElementById('budget').value=p.staff_budget;}catch{}}
-function save(){const raw=localStorage.getItem('ringmaster_brand_profile');const p=raw?JSON.parse(raw):{};p.staff_style=document.getElementById('style').value;p.staff_budget=Number(document.getElementById('budget').value||0);p.staff_creative=Number(document.getElementById('creative').value||0);p.staff_technical=Number(document.getElementById('technical').value||0);p.staff_music=Number(document.getElementById('music').value||0);p.staff_music_style=document.getElementById('musicStyle').value;localStorage.setItem('ringmaster_brand_profile',JSON.stringify(p));}
-document.getElementById('eval').addEventListener('click',evalReport);document.getElementById('save').addEventListener('click',save);load();
+document.getElementById('eval').addEventListener('click',evalReport);
 </script></body></html>

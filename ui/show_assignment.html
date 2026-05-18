@@ -2,14 +2,13 @@
 <html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Ringmaster — Show Assignment</title>
 <style>
-:root{--bg:#050507;--panel:#0d0f14;--card:#121520;--text:#e8ecf3;--muted:#9aa4b6;--primary:#2f7cff;--secondary:#ff2448;--line:rgba(255,255,255,.12)}
-body{margin:0;background:radial-gradient(circle at top right,#101728 0,var(--bg) 45%),var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}.wrap{max-width:1200px;margin:0 auto;padding:20px}
-.top{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;position:relative;overflow:hidden;margin-bottom:12px}.top::before,.card::before{content:"";position:absolute;left:0;top:0;width:100%;height:2px;background:linear-gradient(90deg,var(--secondary),var(--primary));}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;position:relative;overflow:hidden}.row{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px;margin-top:8px}
-button{border:0;border-radius:8px;padding:10px 12px;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#091018;cursor:pointer;margin-top:10px}
-.small{font-size:13px;color:var(--muted)} .actions{display:flex;gap:10px;flex-wrap:wrap}
-</style></head><body><div class="wrap"><section class="top"><h1 style="margin:0">Show Assignment Prototype</h1><div id="sub" class="small">Build a weekly assignment snapshot from roster strengths.</div></section>
-<div class="grid"><section class="card"><h3>Roster Pool</h3><div id="pool"></div><div class="actions"><button id="assign">Assign to Weekly Show</button><button id="save">Save Last Assignment</button></div></section>
+:root{--bg:#0f1115;--panel:#171a21;--card:#232734;--text:#e8ecf3;--muted:#a7b0c0;--primary:#4da3ff;--ok:#37d67a}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}.wrap{max-width:1200px;margin:0 auto;padding:20px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.card{background:var(--panel);border:1px solid #2c3140;border-radius:12px;padding:12px}.row{background:var(--card);border:1px solid #2c3140;border-radius:8px;padding:8px;margin-top:8px}
+button{border:0;border-radius:8px;padding:10px 12px;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--ok));color:#091018;cursor:pointer}
+.small{font-size:13px;color:var(--muted)}
+</style></head><body><div class="wrap"><h1>Show Assignment Prototype</h1>
+<div class="grid"><section class="card"><h3>Roster Pool</h3><div id="pool"></div><button id="assign">Assign to Weekly Show</button></section>
 <section class="card"><h3>Assignment Report</h3><div id="report" class="small">Run assignment.</div></section></div></div>
 <script>
 const roster=[
@@ -21,7 +20,6 @@ const roster=[
 {id:'fa_luna_strike',name:'Luna Strike',align:'face',style:'high_flyer',draw:59,crowd:63}
 ];
 const pool=document.getElementById('pool');
-let lastAssignment=null;
 function renderPool(){ pool.innerHTML=''; roster.forEach(r=>{const d=document.createElement('div');d.className='row';d.innerHTML=`<strong>${r.name}</strong> (${r.align}, ${r.style})<br><span class='small'>Draw ${r.draw} • Crowd ${r.crowd}</span>`;pool.appendChild(d);}); }
 function assign(){
  const picked=[...roster].sort((a,b)=>(b.draw*0.6+b.crowd*0.4)-(a.draw*0.6+a.crowd*0.4)).slice(0,6);
@@ -31,7 +29,6 @@ function assign(){
  const styleCohesion=(maxStyle/picked.length*100).toFixed(2);
  const balance=((1-Math.abs(face-heel)/picked.length)*100).toFixed(2);
  const drawScore=(totalDraw/picked.length).toFixed(2);
- lastAssignment={picked:picked.map(p=>p.id),style_cohesion:Number(styleCohesion),heel_face_balance:Number(balance),draw_score:Number(drawScore)};
  document.getElementById('report').innerHTML=`
   Assigned: ${picked.map(p=>p.name).join(', ')}<br><br>
   Style Cohesion: ${styleCohesion}<br>
@@ -39,32 +36,5 @@ function assign(){
   Average Draw Score: ${drawScore}
  `;
 }
-function load(){
- const raw=localStorage.getItem('ringmaster_brand_profile');
- if(!raw) return;
- try{
-  const p=JSON.parse(raw);
-  if(p.brand_name) document.getElementById('sub').textContent=`Assignment planning for ${p.brand_name} (${p.country||'US'})`;
-  if(p.last_assignment_report){
-    const r=p.last_assignment_report;
-    document.getElementById('report').innerHTML=`
-      Loaded previous assignment:<br>
-      Style Cohesion: ${r.style_cohesion}<br>
-      Heel/Face Balance: ${r.heel_face_balance}<br>
-      Average Draw Score: ${r.draw_score}
-    `;
-  }
- }catch{}
-}
-function save(){
- if(!lastAssignment){ document.getElementById('report').innerHTML += '<br><br>Tip: run assignment first before saving.'; return; }
- const raw=localStorage.getItem('ringmaster_brand_profile');
- const p=raw?JSON.parse(raw):{};
- p.last_assignment_report=lastAssignment;
- localStorage.setItem('ringmaster_brand_profile',JSON.stringify(p));
-}
-document.getElementById('assign').addEventListener('click',assign);
-document.getElementById('save').addEventListener('click',save);
-renderPool();
-load();
+document.getElementById('assign').addEventListener('click',assign);renderPool();
 </script></body></html>

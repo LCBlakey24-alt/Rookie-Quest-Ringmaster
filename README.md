@@ -165,22 +165,6 @@ pip install jsonschema
 ```
 
 
-
-## One-Command Dev Check
-
-To keep building fast while still sanity-checking core systems, run:
-
-```bash
-./scripts/dev_playtest_check.sh
-```
-
-This will:
-- create/use `.venv`,
-- install the package in editable mode,
-- run tests,
-- run the CLI prototype,
-- validate wrestler sample schema files.
-
 ## Framework Prototype (Now Implemented)
 
 A first playable framework has been added in Python under `src/ringmaster/`:
@@ -191,7 +175,7 @@ A first playable framework has been added in Python under `src/ringmaster/`:
 ### Run Prototype
 
 ```bash
-PYTHONPATH=src python -m ringmaster.cli
+python -m ringmaster.cli
 ```
 
 ### Run Tests
@@ -276,79 +260,3 @@ New systems now support lights/lasers/pyro investment and wrestler-specific entr
 ## Weekly Planner Prototype
 
 Added `ui/weekly_planner.html` for interactive planning of show cadence, PPV schedule, and entrance budget pressure with immediate balance feedback.
-
-
-## Campaign Dashboard Prototype
-
-Added `ui/campaign_dashboard.html` to visualize week-level campaign state (rank, cash, domination score, storyline highlights, and risk indicators) and consume values from the saved brand profile.
-
-
-## Booking Board Prototype
-
-Added `src/ringmaster/booking.py` and `ui/booking_board.html` to support ordered segment planning, runtime calculation, and pacing warnings for back-to-back long segments or overlong cards.
-
-
-## Week Advancement Prototype
-
-Added `src/ringmaster/runtime.py` for runtime week progression composition and enhanced `ui/campaign_dashboard.html` with an **Advance Week** action that updates campaign week/rank/share/domination KPIs in the prototype flow.
-
-
-## Backstage Events Prototype
-
-Added `src/ringmaster/events.py` and campaign dashboard event rendering to surface weekly locker-room incidents driven by schedule and entrance-budget risk.
-
-
-## Staff System Prototype
-
-Added `src/ringmaster/staff.py` and `ui/staff_office.html` for hiring-style synergy simulation. Staff quality now trades off against style mismatch and payroll pressure to preserve balance and long-term strategic variety.
-
-
-## Development Show Prototype
-
-Added `src/ringmaster/development.py` and `ui/development_center.html` for developmental show management. Prospects gain readiness through training, and loyalty can drop if you repeatedly sign external free agents instead of promoting trained talent.
-
-
-## Prospect Graduation Prototype
-
-Added `src/ringmaster/roster.py` and `ui/roster_pipeline.html` to model development-to-main-roster promotion decisions. Ready but low-loyalty prospects can leave if blocked, reinforcing the internal-promotion vs external-signing tradeoff.
-
-
-## Talent + Free Agent Prototype
-
-Added `data/samples/free_agents.json`, `src/ringmaster/talent.py`, and `ui/talent_management.html` to model free-agent scouting data (style/alignment/draw/danger/injury risk/finisher popularity) and targeted training tracks (finisher, promo, safety).
-
-
-## Show Assignment Prototype
-
-Added `src/ringmaster/show_assignment.py` and `ui/show_assignment.html` to auto-assign wrestlers to weekly shows based on draw/crowd metrics and return style cohesion + heel/face balance diagnostics.
-
-
-## Game Modes Framework
-
-Added `src/ringmaster/modes.py` and `docs/GAME_MODES.md` to define three core playstyles:
-- Promoter Mode (full company control)
-- General Manager Mode (book the show, outcomes not directly controlled)
-- Wrestler Career Mode (single talent progression)
-
-
-## Wrestler Career RPG Prototype
-
-Added `src/ringmaster/career_rpg.py` and `ui/wrestler_career_mode.html` to support single-wrestler roleplay decisions (contract type, booking attendance choices, and in-match risk decisions) with tradeoff-driven consequences.
-
-
-## Dialogue Hub Prototype
-
-Added `src/ringmaster/dialogue.py` and `ui/dialogue_hub.html` to support hybrid responses in conversations: preset choices plus a freeform typed response option that produces AI-style reply tone and relationship/stress consequences.
-
-
-## Steam Launch Readiness Prototype
-
-Added `src/ringmaster/steam.py` and `docs/STEAM_READINESS_PLAN.md` to track Steam launch blockers (cloud saves, achievements, workshop, Deck/controller support, crash reporting) with measurable completion percentages.
-
-## Full Diagnostic Snapshot (May 17, 2026)
-
-A diagnostic pass was completed and captured in `docs/FULL_DIAGNOSTIC_2026-05-17.md`, including:
-- test status,
-- detected packaging/tooling issues,
-- actionable bug list,
-- and a game-readiness feature checklist.

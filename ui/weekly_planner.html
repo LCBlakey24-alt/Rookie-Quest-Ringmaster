@@ -5,28 +5,20 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Ringmaster — Weekly Planner</title>
   <style>
-    :root{--bg:#050507;--panel:#0d0f14;--card:#121520;--text:#e8ecf3;--muted:#9aa4b6;--primary:#2f7cff;--secondary:#ff2448;--line:rgba(255,255,255,.12);--ok:#67e8a5}
-    body{margin:0;background:radial-gradient(circle at top right,#101728 0,var(--bg) 45%),var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}
+    :root{--bg:#0f1115;--panel:#171a21;--text:#e8ecf3;--muted:#a7b0c0;--primary:#4da3ff;--secondary:#37d67a}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}
     .wrap{max-width:1200px;margin:0 auto;padding:24px}
-    .top{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;position:relative;overflow:hidden;margin-bottom:14px}
-    .top::before,.card::before{content:"";position:absolute;left:0;top:0;width:100%;height:2px;background:linear-gradient(90deg,var(--secondary),var(--primary));}
     .grid{display:grid;grid-template-columns:420px 1fr;gap:16px}
-    .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;position:relative;overflow:hidden}
+    .card{background:var(--panel);border:1px solid #2c3140;border-radius:12px;padding:14px}
     label{display:block;margin-top:10px;color:var(--muted);font-size:14px}
-    input,textarea{width:100%;margin-top:6px;padding:10px;border-radius:8px;border:1px solid var(--line);background:#0a0d14;color:var(--text)}
-    .kpi{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;margin-top:10px}
+    input,textarea{width:100%;margin-top:6px;padding:10px;border-radius:8px;border:1px solid #2c3140;background:#0f131c;color:var(--text)}
+    .kpi{background:#232734;border:1px solid #2c3140;border-radius:10px;padding:12px;margin-top:10px}
     h1,h2{margin:0 0 8px}
-    .actions{display:flex;gap:10px;margin-top:12px}
-    button{border:0;border-radius:8px;padding:10px 12px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#091018}
-    .msg{margin-top:10px;color:var(--ok);font-size:13px;min-height:18px}
   </style>
 </head>
 <body>
 <div class="wrap">
-  <section class="top">
-    <h1>Weekly Planner Prototype</h1>
-    <div id="subtitle" style="color:var(--muted)">Plan this week’s cadence and production risk profile.</div>
-  </section>
+  <h1>Weekly Planner Prototype</h1>
   <div class="grid">
     <section class="card">
       <h2>Cadence + Entrance Inputs</h2>
@@ -77,40 +69,7 @@
     outE.textContent = `Entrance crowd bonus: +${crowd} | Morale delta: ${morale}`;
     outP.textContent = `PPV schedule: ${events.join(' | ') || 'No PPVs scheduled'}`;
   }
-
-  function loadProfile(){
-    const raw = localStorage.getItem('ringmaster_brand_profile');
-    if(!raw) return;
-    try {
-      const p = JSON.parse(raw);
-      if (p.brand_name) document.getElementById('subtitle').textContent = `Planning for ${p.brand_name} (${p.country || 'US'})`;
-      if (p.weekly_shows) el.weeklyShows.value = p.weekly_shows;
-      if (p.monthly_ppvs !== undefined) el.monthlyPPVs.value = p.monthly_ppvs;
-      if (p.ppv_entrance_budget) el.entranceBudget.value = p.ppv_entrance_budget;
-      if (p.top_star_demand) el.topStarDemand.value = p.top_star_demand;
-      if (Array.isArray(p.ppv_names)) el.ppvNames.value = p.ppv_names.join(', ');
-      if (Array.isArray(p.ppv_themes)) el.ppvThemes.value = p.ppv_themes.join(', ');
-    } catch {}
-  }
-
-  function savePlan(){
-    const raw = localStorage.getItem('ringmaster_brand_profile');
-    const profile = raw ? JSON.parse(raw) : {};
-    profile.weekly_shows = Number(el.weeklyShows.value || 0);
-    profile.monthly_ppvs = Number(el.monthlyPPVs.value || 0);
-    profile.ppv_entrance_budget = Number(el.entranceBudget.value || 0);
-    profile.top_star_demand = Number(el.topStarDemand.value || 0);
-    profile.ppv_names = el.ppvNames.value.split(',').map(s=>s.trim()).filter(Boolean).slice(0,4);
-    profile.ppv_themes = el.ppvThemes.value.split(',').map(s=>s.trim()).filter(Boolean).slice(0,4);
-    localStorage.setItem('ringmaster_brand_profile', JSON.stringify(profile));
-    document.getElementById('saveMsg').textContent = 'Saved planner settings to brand profile.';
-  }
-
   ids.forEach(i=>el[i].addEventListener('input', render));
-  document.getElementById('savePlan').addEventListener('click', savePlan);
-  document.getElementById('openCampaign').addEventListener('click', () => window.location.href='campaign_dashboard.html');
-
-  loadProfile();
   render();
 </script>
 </body>

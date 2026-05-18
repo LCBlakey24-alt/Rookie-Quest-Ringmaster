@@ -2,21 +2,18 @@
 <html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Ringmaster — Roster Pipeline</title>
 <style>
-:root{--bg:#050507;--panel:#0d0f14;--card:#121520;--text:#e8ecf3;--muted:#9aa4b6;--ok:#67e8a5;--warn:#ffb020;--bad:#ff5c5c;--primary:#2f7cff;--secondary:#ff2448;--line:rgba(255,255,255,.12)}
-body{margin:0;background:radial-gradient(circle at top right,#101728 0,var(--bg) 45%),var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}.wrap{max-width:1200px;margin:0 auto;padding:20px}
-.top{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;position:relative;overflow:hidden;margin-bottom:12px}.top::before,.card::before{content:"";position:absolute;left:0;top:0;width:100%;height:2px;background:linear-gradient(90deg,var(--secondary),var(--primary));}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:12px;position:relative;overflow:hidden}.k{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px;margin-top:8px}
-button{border:0;border-radius:8px;padding:10px 12px;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#091018;cursor:pointer;margin-right:8px}
-.small{color:var(--muted);font-size:13px}
-</style></head><body><div class="wrap"><section class="top"><h1 style="margin:0">Roster Pipeline Prototype</h1><div id="sub" class="small">Evaluate prospect graduation into main roster with loyalty tradeoffs.</div></section>
-<div class="card"><div>Run graduation simulation and persist the latest outcome into your brand profile.</div><div style="margin-top:10px"><button id="run">Run Graduation</button><button id="save">Save Result</button></div><div id="out"></div></div></div>
+:root{--bg:#0f1115;--panel:#171a21;--card:#232734;--text:#e8ecf3;--muted:#a7b0c0;--ok:#37d67a;--warn:#ffb020;--bad:#ff5c5c;--primary:#4da3ff}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}.wrap{max-width:1200px;margin:0 auto;padding:20px}
+.card{background:var(--panel);border:1px solid #2c3140;border-radius:12px;padding:12px;margin-top:12px}.k{background:var(--card);border:1px solid #2c3140;border-radius:8px;padding:8px;margin-top:8px}
+button{border:0;border-radius:8px;padding:10px 12px;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--ok));color:#091018;cursor:pointer}
+</style></head><body><div class="wrap"><h1>Roster Pipeline Prototype</h1>
+<div class="card"><div>Evaluate prospect graduation into main roster with loyalty tradeoffs.</div><button id="run">Run Graduation</button><div id="out"></div></div></div>
 <script>
 const prospects=[
  {id:'p1',name:'Rook Steel',readiness:78,loyalty:60},
  {id:'p2',name:'Sky Drift',readiness:65,loyalty:70},
  {id:'p3',name:'Volt Reign',readiness:82,loyalty:20}
 ];
-let lastResult=null;
 function run(){
  const promoted=[],stayed=[],released=[];
  prospects.forEach(p=>{
@@ -24,28 +21,11 @@ function run(){
   else if(p.readiness>=70 && p.loyalty<25) released.push(p.name);
   else stayed.push(p.name);
  });
- lastResult={promoted,stayed,released};
  document.getElementById('out').innerHTML=`
   <div class='k' style='color:var(--ok)'>Promoted: ${promoted.join(', ')||'None'}</div>
   <div class='k' style='color:var(--warn)'>Stayed in Development: ${stayed.join(', ')||'None'}</div>
   <div class='k' style='color:var(--bad)'>Left Company Risk: ${released.join(', ')||'None'}</div>
  `;
 }
-function load(){
- const raw=localStorage.getItem('ringmaster_brand_profile');
- if(!raw) return;
- try{const p=JSON.parse(raw); if(p.brand_name) document.getElementById('sub').textContent=`Pipeline review for ${p.brand_name} (${p.country||'US'})`;
- if(p.last_roster_pipeline){ const r=p.last_roster_pipeline; document.getElementById('out').innerHTML=`<div class='k'>Loaded previous result:</div><div class='k' style='color:var(--ok)'>Promoted: ${(r.promoted||[]).join(', ')||'None'}</div><div class='k' style='color:var(--warn)'>Stayed in Development: ${(r.stayed||[]).join(', ')||'None'}</div><div class='k' style='color:var(--bad)'>Left Company Risk: ${(r.released||[]).join(', ')||'None'}</div>`; }
- }catch{}
-}
-function save(){
- if(!lastResult) return;
- const raw=localStorage.getItem('ringmaster_brand_profile');
- const p=raw?JSON.parse(raw):{};
- p.last_roster_pipeline=lastResult;
- localStorage.setItem('ringmaster_brand_profile',JSON.stringify(p));
-}
 document.getElementById('run').addEventListener('click',run);
-document.getElementById('save').addEventListener('click',save);
-load();
 </script></body></html>
