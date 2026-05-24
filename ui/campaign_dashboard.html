@@ -3,133 +3,45 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Ringmaster — Campaign Dashboard</title>
+  <title>Rookie Quest: Ringmaster — Campaign Dashboard</title>
   <style>
-    :root { --bg:#0f1115; --panel:#171a21; --card:#232734; --text:#e8ecf3; --muted:#a7b0c0; --primary:#4da3ff; --secondary:#37d67a; --warn:#ffb020; }
-    body { margin:0; font-family: Inter, Arial, sans-serif; background:var(--bg); color:var(--text); }
-    .wrap { max-width:1300px; margin:0 auto; padding:20px; }
-    .top { background:var(--panel); border:1px solid #2c3140; border-radius:12px; padding:14px; display:flex; justify-content:space-between; align-items:center; }
-    .title { font-size:30px; margin:0; }
-    .small { color:var(--muted); font-size:14px; }
-    .grid { display:grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap:12px; margin-top:12px; }
-    .kpi { background:var(--panel); border:1px solid #2c3140; border-radius:12px; padding:12px; }
-    .kpi .v { font-size:26px; font-weight:800; }
-    .main { display:grid; grid-template-columns: 1.2fr 1fr; gap:12px; margin-top:12px; }
-    .card { background:var(--panel); border:1px solid #2c3140; border-radius:12px; padding:12px; }
-    .story { background:var(--card); border:1px solid #2c3140; border-radius:8px; padding:8px; margin-top:8px; }
-    button { border:0; border-radius:8px; padding:10px 12px; font-weight:700; cursor:pointer; background:linear-gradient(135deg,var(--primary),var(--secondary)); color:#091018; }
+    :root { --deep:#0B1324; --bg:#11151C; --panel:#171A21; --card:#232734; --steel:#2A303B; --border:#2C3140; --gold:#D4AF37; --gold-dark:#9B7A20; --text:#F2F2F2; --muted:#A7B0C0; --teal:#19A7A5; --green:#37D67A; --amber:#FFB020; --crimson:#C62828; }
+    *{box-sizing:border-box} body{margin:0;background:linear-gradient(180deg,#060A12,var(--deep));color:var(--text);font-family:Inter,Arial,sans-serif} .wrap{max-width:1420px;margin:0 auto;padding:22px}.panel{background:rgba(23,26,33,.92);border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:0 18px 50px rgba(0,0,0,.28)}.gold{border-color:rgba(212,175,55,.38)}.top{display:flex;justify-content:space-between;gap:16px;align-items:center;background:linear-gradient(135deg,rgba(23,26,33,.95),rgba(11,19,36,.96));border:1px solid rgba(212,175,55,.35)}h1,h2,h3{margin:0}.title{font-size:34px;text-transform:uppercase;letter-spacing:.04em}.title span{color:var(--gold)}.small,.muted{color:var(--muted);font-size:13px}.actions{display:flex;gap:10px;flex-wrap:wrap}button{cursor:pointer;border-radius:10px;padding:11px 13px;font-weight:850;text-transform:uppercase;letter-spacing:.04em;border:1px solid rgba(212,175,55,.35)}.primary{background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#091018}.secondary{background:var(--card);color:var(--text);border-color:var(--border)}.tabs{display:flex;gap:8px;margin-top:14px}.tab{padding:8px 12px;border:1px solid var(--border);border-radius:999px;color:var(--muted);font-size:12px;text-transform:uppercase}.tab.active{color:#091018;background:var(--gold);border-color:var(--gold)}.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:14px}.kpi{position:relative;overflow:hidden}.kpi:after{content:"";position:absolute;left:14px;right:14px;bottom:10px;height:2px;background:linear-gradient(90deg,var(--teal),transparent)}.kpi .label{text-transform:uppercase;color:var(--muted);font-size:11px;letter-spacing:.08em}.kpi .value{font-size:28px;font-weight:900;margin-top:7px}.kpi .delta{color:var(--green);font-size:12px}.main{display:grid;grid-template-columns:1.1fr .9fr 330px;gap:12px;margin-top:12px}.chart{height:190px;background:linear-gradient(180deg,rgba(35,39,52,.55),rgba(17,21,28,.65));border:1px solid var(--border);border-radius:14px;margin-top:12px;padding:12px;position:relative;overflow:hidden}.chart svg{position:absolute;inset:12px;width:calc(100% - 24px);height:calc(100% - 24px)}.bar{display:grid;grid-template-columns:1fr 64px;gap:10px;align-items:center;margin-top:12px}.bar .track{height:9px;background:#101620;border-radius:99px;overflow:hidden;border:1px solid var(--border)}.bar span{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--crimson))}.money-row{display:flex;justify-content:space-between;border-bottom:1px solid rgba(44,49,64,.75);padding:8px 0}.money-row b{color:var(--green)}.money-row .bad{color:var(--crimson)}.alert{border-radius:12px;padding:12px;background:rgba(35,39,52,.72);border:1px solid var(--border);margin-top:10px}.alert strong{display:block;margin-bottom:4px}.alert.danger{border-left:3px solid var(--crimson)}.alert.good{border-left:3px solid var(--green)}.alert.warn{border-left:3px solid var(--amber)}.upcoming{min-height:164px;background:radial-gradient(circle at 80% 15%,rgba(212,175,55,.23),transparent 25%),linear-gradient(135deg,#101620,#080b12);display:flex;flex-direction:column;justify-content:space-between}.event-name{font-size:22px;font-weight:900;color:var(--gold);text-transform:uppercase}.footer{margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:1100px){.main{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}.footer{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
 <div class="wrap">
-  <section class="top">
-    <div>
-      <h1 class="title" id="brandTitle">Player Created League</h1>
-      <div class="small" id="subtitle">Week 1 • Home US</div>
-    </div>
-    <div>
-      <button onclick="window.location.href='weekly_planner.html'">Open Weekly Planner</button>
-      <button id="advanceWeek" style="margin-left:8px">Advance Week</button>
-    </div>
+  <section class="panel top gold">
+    <div><h1 class="title" id="brandTitle">Rookie Quest: <span>Ringmaster</span></h1><div class="small" id="subtitle">Week 1 • Season 1 • Home US</div><div class="tabs"><div class="tab active">Overview</div><div class="tab">Finances</div><div class="tab">Ratings</div><div class="tab">Storylines</div><div class="tab">Talent</div></div></div>
+    <div class="actions"><button class="secondary" onclick="window.location.href='main_menu.html'">Main Menu</button><button class="secondary" onclick="window.location.href='booking_board.html'">Booking Board</button><button class="primary" id="advanceWeek">Advance Week</button></div>
   </section>
 
-  <section class="grid">
-    <div class="kpi"><div class="small">World Rank</div><div class="v" id="rank">#21</div></div>
-    <div class="kpi"><div class="small">Market Share</div><div class="v" id="share">2.95%</div></div>
-    <div class="kpi"><div class="small">Cash</div><div class="v" id="cash">$500,000</div></div>
-    <div class="kpi"><div class="small">Domination Score</div><div class="v" id="dom">34.0</div></div>
+  <section class="kpis">
+    <div class="panel kpi"><div class="label">Cash</div><div class="value" id="cash">$500,000</div><div class="delta">+$18,420 projected</div></div>
+    <div class="panel kpi"><div class="label">Popularity</div><div class="value" id="popularity">67</div><div class="delta">+3 this month</div></div>
+    <div class="panel kpi"><div class="label">Morale</div><div class="value" id="morale">72</div><div class="delta" style="color:var(--amber)">-2 locker room</div></div>
+    <div class="panel kpi"><div class="label">Fan Trust</div><div class="value" id="fanTrust">68</div><div class="delta">+4 after PPV</div></div>
+    <div class="panel kpi"><div class="label">World Rank</div><div class="value" id="rank">#21</div><div class="delta">Market share <span id="share">2.95%</span></div></div>
   </section>
 
   <section class="main">
-    <article class="card">
-      <h2 style="margin:0">Top Storylines</h2>
-      <div class="story">Neon Collision Feud — Heat 88</div>
-      <div class="story">Crimson Crown Conflict — Heat 75</div>
-      <div class="story">Atlas Alliance Split — Heat 60</div>
-    </article>
-    <article class="card">
-      <h2 style="margin:0">Risk Monitor</h2>
-      <div class="small" id="cadence">Cadence penalty: 10.5 (Fan trust -3.68)</div>
-      <div class="small" id="entrance" style="margin-top:8px; color:var(--warn)">Entrance risk: Underfunded top star</div>
-      <div class="small" style="margin-top:12px;">Tip: reduce weekly shows or PPVs before scaling to avoid trust collapse.</div>
-    </article>
+    <article class="panel gold"><h2>Popularity Trend</h2><div class="small">Last 12 weeks</div><div class="chart"><svg viewBox="0 0 400 160" preserveAspectRatio="none"><polyline fill="none" stroke="#19A7A5" stroke-width="4" points="0,125 35,120 70,118 105,105 140,112 175,92 210,96 245,82 280,77 315,66 350,72 400,52"/><polyline fill="none" stroke="rgba(212,175,55,.5)" stroke-width="2" points="0,130 400,70"/></svg></div></article>
+    <article class="panel"><h2>Storyline Heat</h2><div class="bar"><div><b>The Dynasty Civil War</b><div class="track"><span style="width:85%"></span></div></div><b>85</b></div><div class="bar"><div><b>Rise of the Renegade</b><div class="track"><span style="width:68%"></span></div></div><b>68</b></div><div class="bar"><div><b>Tag Team Gold Rush</b><div class="track"><span style="width:54%"></span></div></div><b>54</b></div><div class="bar"><div><b>Veteran's Last Stand</b><div class="track"><span style="width:32%"></span></div></div><b>32</b></div></article>
+    <aside class="panel upcoming gold"><div><div class="small">Next Show</div><div class="event-name">Mayhem Tour: Capital Collision</div><div class="small">Washington, D.C. • 3 days away</div></div><button class="primary" onclick="window.location.href='booking_board.html'">Book Show</button></aside>
   </section>
 
-  <section class="card" style="margin-top:12px">
-    <h2 style="margin:0">Backstage Events</h2>
-    <div id="eventsList" class="small" style="margin-top:8px"></div>
+  <section class="footer">
+    <article class="panel"><h2>Financial Summary</h2><div class="money-row"><span>Revenue</span><b>$626,300</b></div><div class="money-row"><span>Show Costs</span><b class="bad">$312,470</b></div><div class="money-row"><span>Talent Costs</span><b class="bad">$186,220</b></div><div class="money-row"><span>Merch & Sponsors</span><b>$94,560</b></div><div class="money-row"><span>Net Profit</span><b>$222,170</b></div></article>
+    <article class="panel"><h2>Alerts / Backstage Events</h2><div id="eventsList"><div class="alert warn"><strong>Fan Fatigue Concerns</strong><small>Scheduling intensity is being watched.</small></div><div class="alert danger"><strong>Top Star Entrance Dispute</strong><small>Production budget could affect morale.</small></div><div class="alert good"><strong>Locker Room Note</strong><small>Young talent responded well to recent booking.</small></div></div></article>
   </section>
 </div>
 <script>
   const profileRaw = localStorage.getItem('ringmaster_brand_profile');
   if (profileRaw) {
-    try {
-      const p = JSON.parse(profileRaw);
-      document.getElementById('brandTitle').textContent = p.brand_name || 'Player Created League';
-      document.getElementById('subtitle').textContent = `Week 1 • Home ${p.country || 'US'}`;
-      if (p.starting_cash) document.getElementById('cash').textContent = `$${Number(p.starting_cash).toLocaleString()}`;
-      if (p.weekly_shows || p.monthly_ppvs) {
-        const ws = Number(p.weekly_shows || 2), ppv = Number(p.monthly_ppvs || 1);
-        const workload = ws > 3 ? (ws - 3) * 4.5 : 0;
-        const sat = ppv > 1 ? (ppv - 1) * 6.0 : 0;
-        const total = workload + sat;
-        const trust = -(total * 0.35).toFixed(2);
-        document.getElementById('cadence').textContent = `Cadence penalty: ${total.toFixed(2)} (Fan trust ${trust})`;
-      }
-      if (p.top_star_demand && p.ppv_entrance_budget) {
-        const d = Number(p.top_star_demand), b = Number(p.ppv_entrance_budget);
-        document.getElementById('entrance').textContent = b < d ? 'Entrance risk: Underfunded top star demand' : 'Entrance risk: Controlled';
-      }
-    } catch {}
+    try { const p = JSON.parse(profileRaw); document.getElementById('brandTitle').innerHTML = `${p.brand_name || 'Rookie Quest'}: <span>Ringmaster</span>`; document.getElementById('subtitle').textContent = `Week 1 • Season 1 • Home ${p.country || 'US'}`; if (p.starting_cash) document.getElementById('cash').textContent = `$${Number(p.starting_cash).toLocaleString()}`; } catch {}
   }
-
-  const weekKey = 'ringmaster_week';
-  const rankEl = document.getElementById('rank');
-  const shareEl = document.getElementById('share');
-  const domEl = document.getElementById('dom');
-  const subtitle = document.getElementById('subtitle');
-
-  let week = Number(localStorage.getItem(weekKey) || 1);
-  function setWeekUI() {
-    subtitle.textContent = subtitle.textContent.replace(/Week \d+/, `Week ${week}`);
-  }
-  setWeekUI();
-
-  document.getElementById('advanceWeek').addEventListener('click', () => {
-    week += 1;
-    localStorage.setItem(weekKey, String(week));
-
-    const currentRank = Number(rankEl.textContent.replace('#',''));
-    if (currentRank > 1 && Math.random() > 0.45) rankEl.textContent = `#${currentRank - 1}`;
-
-    const share = Number(shareEl.textContent.replace('%',''));
-    shareEl.textContent = `${(share + 0.2).toFixed(2)}%`;
-
-    const dom = Number(domEl.textContent);
-    domEl.textContent = (dom + 1.4).toFixed(1);
-
-    setWeekUI();
-  });
-
-  function buildEvents() {
-    const ev = [];
-    const cadenceTxt = document.getElementById('cadence').textContent;
-    const entranceTxt = document.getElementById('entrance').textContent;
-    if (cadenceTxt.includes('penalty:') && !cadenceTxt.includes('penalty: 0.00')) {
-      ev.push('Fan Fatigue Concerns — audience says schedule intensity is too high.');
-    }
-    if (entranceTxt.includes('Underfunded')) {
-      ev.push('Top Star Entrance Dispute — production demand mismatch is affecting morale.');
-    }
-    if (!ev.length) ev.push('Locker Room Stable — no major incidents this week.');
-    document.getElementById('eventsList').innerHTML = ev.map(x => `• ${x}`).join('<br/>');
-  }
-  buildEvents();
-
-  const oldAdvance = document.getElementById('advanceWeek').onclick;
-  document.getElementById('advanceWeek').addEventListener('click', () => {
-    buildEvents();
-  });
+  const weekKey='ringmaster_week'; let week=Number(localStorage.getItem(weekKey)||1); const subtitle=document.getElementById('subtitle'); function setWeekUI(){subtitle.textContent=subtitle.textContent.replace(/Week \d+/,`Week ${week}`)} setWeekUI();
+  document.getElementById('advanceWeek').addEventListener('click',()=>{week+=1;localStorage.setItem(weekKey,String(week)); const rank=document.getElementById('rank'); const current=Number(rank.textContent.replace('#','')); if(current>1) rank.textContent=`#${current-1}`; const share=document.getElementById('share'); share.textContent=`${(Number(share.textContent.replace('%',''))+.2).toFixed(2)}%`; setWeekUI();});
 </script>
 </body>
 </html>
