@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Rookie Quest: Ringmaster — Show History</title>
+  <style>
+    :root{--deep:#0B1324;--panel:#171A21;--card:#232734;--border:#2C3140;--gold:#D4AF37;--gold-dark:#9B7A20;--text:#F2F2F2;--muted:#A7B0C0;--teal:#19A7A5;--green:#37D67A;--amber:#FFB020;--crimson:#C62828}*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#060A12,var(--deep));color:var(--text);font-family:Inter,Arial,sans-serif}.wrap{max-width:1380px;margin:0 auto;padding:24px}.panel{background:rgba(23,26,33,.94);border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:0 16px 48px rgba(0,0,0,.28)}.gold{border-color:rgba(212,175,55,.38)}.top{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:14px;background:linear-gradient(135deg,rgba(23,26,33,.97),rgba(11,19,36,.95))}h1,h2,h3{margin:0}.title{text-transform:uppercase;letter-spacing:.05em}.title span{color:var(--gold)}.muted,.small{color:var(--muted);font-size:13px}.actions{display:flex;gap:10px;flex-wrap:wrap}button{cursor:pointer;border-radius:10px;padding:11px 13px;font-weight:850;text-transform:uppercase;letter-spacing:.04em;border:1px solid rgba(212,175,55,.35)}.primary{background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#091018}.secondary{background:var(--card);color:var(--text);border-color:var(--border)}.toolbar{display:flex;gap:10px;align-items:center;margin-bottom:14px}.toolbar input,.toolbar select{background:#0f131c;color:var(--text);border:1px solid var(--border);border-radius:10px;padding:11px}.toolbar input{min-width:280px}.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}.kpi span{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.07em}.kpi b{font-size:28px;color:var(--gold)}.history{display:grid;gap:12px}.show{background:rgba(35,39,52,.72);border:1px solid var(--border);border-radius:16px;padding:14px}.show-head{display:flex;justify-content:space-between;gap:12px}.show-title{font-size:20px;font-weight:950}.score{font-size:30px;font-weight:1000;color:var(--gold)}.pill{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:4px 9px;color:var(--muted);font-size:12px;margin:7px 6px 0 0}.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:12px}.stat{background:rgba(17,21,28,.7);border:1px solid var(--border);border-radius:12px;padding:10px}.stat span{display:block;color:var(--muted);font-size:11px;text-transform:uppercase}.stat b{font-size:18px;color:var(--text)}.note{margin-top:10px;padding:10px;border-radius:10px;border:1px solid var(--border);background:rgba(17,21,28,.72);color:var(--muted);line-height:1.45}.empty{border:1px dashed rgba(212,175,55,.42);background:rgba(212,175,55,.06);border-radius:14px;padding:16px}@media(max-width:900px){.top,.toolbar{display:block}.actions{margin-top:12px}.toolbar input,.toolbar select{width:100%;margin-top:8px}.kpis,.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <section class="panel top gold">
+    <div><h1 class="title">Show <span>History</span></h1><div class="small">A running archive of every show you have advanced from the night report.</div></div>
+    <div class="actions"><button class="secondary" onclick="location.href='campaign_dashboard.html'">Dashboard</button><button class="secondary" onclick="location.href='booking_board.html'">Booking Board</button><button class="secondary" onclick="location.href='roster_momentum.html'">Roster</button><button class="primary" id="exportHistory">Export History JSON</button></div>
+  </section>
+
+  <section class="kpis">
+    <div class="panel kpi"><span>Total Shows</span><b id="totalShows">0</b></div>
+    <div class="panel kpi"><span>Average Rating</span><b id="avgRating">0</b></div>
+    <div class="panel kpi"><span>Best Show</span><b id="bestShow">0</b></div>
+    <div class="panel kpi"><span>Latest Week</span><b id="latestWeek">1</b></div>
+  </section>
+
+  <section class="panel toolbar"><input id="search" placeholder="Search show, staff, notes..." /><select id="filter"><option value="">All Scores</option><option value="hot">Hot Shows 75+</option><option value="mixed">Mixed 55–74</option><option value="cold">Cold Under 55</option></select><span class="muted" id="count"></span></section>
+
+  <section id="history" class="history"></section>
+</div>
+<script src="js/ringmaster-state.js"></script>
+<script>
+  const historyEl = document.getElementById('history');
+  const searchEl = document.getElementById('search');
+  const filterEl = document.getElementById('filter');
+  const countEl = document.getElementById('count');
+
+  function getHistory(){
+    if(window.RingmasterState) return window.RingmasterState.getShowHistory();
+    try{return JSON.parse(localStorage.getItem('ringmaster_show_history')||'[]')}catch{return []}
+  }
+
+  function signed(n){return Number(n)>0?`+${n}`:`${n||0}`}
+
+  function scoreGroup(score){
+    if(Number(score)>=75) return 'hot';
+    if(Number(score)>=55) return 'mixed';
+    return 'cold';
+  }
+
+  function render(){
+    const history = getHistory();
+    const q = searchEl.value.toLowerCase().trim();
+    const f = filterEl.value;
+    const total = history.length;
+    const avg = total ? Math.round(history.reduce((sum,s)=>sum+Number(s.overall||0),0)/total) : 0;
+    const best = total ? Math.max(...history.map(s=>Number(s.overall||0))) : 0;
+    const latest = total ? Math.max(...history.map(s=>Number(s.week||1))) : Number(localStorage.getItem('ringmaster_week')||1);
+    document.getElementById('totalShows').textContent = total;
+    document.getElementById('avgRating').textContent = avg;
+    document.getElementById('bestShow').textContent = best;
+    document.getElementById('latestWeek').textContent = latest;
+
+    const shown = history.filter(show=>{
+      const hay = JSON.stringify(show).toLowerCase();
+      return (!q || hay.includes(q)) && (!f || scoreGroup(show.overall)===f);
+    });
+    countEl.textContent = `${shown.length} shown`;
+
+    if(!shown.length){
+      historyEl.innerHTML = `<div class="empty"><strong>No show history yet.</strong><div class="small" style="margin-top:6px">Run a show, open the night report, and advance week to archive it here.</div></div>`;
+      return;
+    }
+
+    historyEl.innerHTML = shown.map(show=>{
+      const fallout = show.fallout || {};
+      const incidents = show.refereeIncidents || {};
+      const notes = (show.notes || fallout.notes || []).slice(0,4);
+      const roster = show.rosterChanges || [];
+      return `<article class="show">
+        <div class="show-head"><div><div class="show-title">Week ${show.week || '?'} — ${show.showName || 'Untitled Show'}</div><span class="pill">${show.crowdMood || 'Unknown crowd'}</span><span class="pill">${show.announcerName || 'Announcer n/a'}</span><span class="pill">${show.commentatorName || 'Commentary n/a'}</span><span class="pill">${show.refereeName || 'Referee n/a'}</span></div><div class="score">${show.overall || 0}</div></div>
+        <div class="grid"><div class="stat"><span>Wrestlers</span><b>${show.wrestler || 0}</b></div><div class="stat"><span>Commentary</span><b>${show.commentary || 0}</b></div><div class="stat"><span>Referee</span><b>${show.referee || 0}</b></div><div class="stat"><span>Fan Trust</span><b>${signed(fallout.fanTrust)}</b></div><div class="stat"><span>Cash</span><b>${Number(fallout.cash||0)>=0?'+':'-'}$${Math.abs(Number(fallout.cash||0)).toLocaleString()}</b></div></div>
+        <div class="note">${notes.length?notes.join('<br>'):'No fallout notes saved.'}</div>
+        ${roster.length?`<div class="note"><strong>Roster movers:</strong><br>${roster.slice(0,3).map(r=>`${r.name}: ${r.wBefore} → ${r.wAfter} (${r.delta>=0?'+':''}${r.delta})`).join('<br>')}</div>`:''}
+        ${incidents.badCalls||incidents.refBumps||incidents.refInjuries?`<div class="note"><strong>Referee incidents:</strong> Bad calls ${incidents.badCalls||0}, ref bumps ${incidents.refBumps||0}, injuries ${incidents.refInjuries||0}</div>`:''}
+      </article>`;
+    }).join('');
+  }
+
+  searchEl.addEventListener('input', render);
+  filterEl.addEventListener('change', render);
+  document.getElementById('exportHistory').onclick = () => {
+    const data = JSON.stringify(getHistory(), null, 2);
+    const blob = new Blob([data], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'rookie-quest-ringmaster-show-history.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+  render();
+</script>
+</body>
+</html>
