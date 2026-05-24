@@ -6,7 +6,6 @@ from datetime import date
 from .contracts import Contract
 from .finance import FinanceEngine, FinanceSnapshot
 from .game import WeeklyShow
-from .models import MatchOutcome
 from .morale import MoraleEngine, MoraleState
 from .storylines import Storyline, StorylineEngine
 
@@ -43,7 +42,12 @@ class WeeklyLoop:
         results = show.run()
         rating = WeeklyShow.average_rating(results)
 
-        payroll = round(sum(c.weekly_cost(1) for c in contracts), 2)
+        appearances: dict[str, int] = {}
+        for slot in show.slots:
+            appearances[slot.wrestler_a.id] = appearances.get(slot.wrestler_a.id, 0) + 1
+            appearances[slot.wrestler_b.id] = appearances.get(slot.wrestler_b.id, 0) + 1
+
+        payroll = round(sum(c.weekly_cost(appearances.get(c.wrestler_id, 0)) for c in contracts), 2)
         finance = self.finance_engine.project_week(
             starting_cash=starting_cash,
             attendance=attendance,
@@ -56,17 +60,47 @@ class WeeklyLoop:
         expiring = [c.wrestler_id for c in contracts if c.expires_within_days(today, 30)]
 
         updated_storylines: list[Storyline] = []
+        storyline_by_id = {s.id: s for s in storylines or []}
+        progressed_storyline_ids: set[str] = set()
+        for slot, result in zip(show.slots, results):
+            if slot.storyline_id and slot.storyline_id in storyline_by_id:
+                updated_storylines.append(
+                    self.storyline_engine.progress(
+                        storyline_by_id[slot.storyline_id],
+                        result.rating,
+                        clean_finish=slot.is_clean_finish(),
+                    )
+                )
+                progressed_storyline_ids.add(slot.storyline_id)
+
         if storylines and results:
-            main_rating = results[-1].rating
-            for s in storylines:
-                updated_storylines.append(self.storyline_engine.progress(s, main_rating, clean_finish=True))
+            fallback_rating = results[-1].rating
+            for storyline in storylines:
+                if storyline.id not in progressed_storyline_ids:
+                    updated_storylines.append(
+                        self.storyline_engine.progress(
+                            storyline,
+                            fallback_rating,
+                            clean_finish=True,
+                        )
+                    )
 
         morale_updates: list[MoraleState] = []
-        if show.slots and results:
-            latest = results[-1]
-            for slot in show.slots:
-                won_a = slot.outcome in {MatchOutcome.CLEAN, MatchOutcome.DIRTY, MatchOutcome.ROLL_UP}
-                morale_updates.append(self.morale_engine.apply_show_result(MoraleState(slot.wrestler_a.id, 50), latest.rating, won_a))
-                morale_updates.append(self.morale_engine.apply_show_result(MoraleState(slot.wrestler_b.id, 50), latest.rating, not won_a))
+        for slot, result in zip(show.slots, results):
+            winner_id = slot.resolved_winner_id()
+            morale_updates.append(
+                self.morale_engine.apply_show_result(
+                    MoraleState(slot.wrestler_a.id, 50),
+                    result.rating,
+                    won=winner_id == slot.wrestler_a.id,
+                )
+            )
+            morale_updates.append(
+                self.morale_engine.apply_show_result(
+                    MoraleState(slot.wrestler_b.id, 50),
+                    result.rating,
+                    won=winner_id == slot.wrestler_b.id,
+                )
+            )
 
         return WeeklyReport(show.name, rating, finance, expiring, updated_storylines, morale_updates)
