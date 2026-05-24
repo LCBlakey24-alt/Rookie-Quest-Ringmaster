@@ -13,7 +13,7 @@
 <div class="wrap">
   <section class="panel top gold">
     <div><h1 class="title">Booking Board / <span>Show Planner</span></h1><div class="muted" id="showMeta">Prototype event • Week 1</div></div>
-    <div class="actions"><button class="secondary" onclick="window.location.href='campaign_dashboard.html'">Dashboard</button><button class="secondary" onclick="window.location.href='weekly_planner.html'">Weekly Planner</button><button class="primary" id="saveCard">Save Card</button><button class="primary" id="runShow">Run Show</button></div>
+    <div class="actions"><button class="secondary" onclick="window.location.href='campaign_dashboard.html'">Dashboard</button><button class="secondary" onclick="window.location.href='weekly_planner.html'">Weekly Planner</button><button class="secondary" onclick="window.location.href='broadcast_team.html'">Broadcast Team</button><button class="primary" id="saveCard">Save Card</button><button class="primary" id="runShow">Run Show</button></div>
   </section>
 
   <div class="layout">
@@ -32,6 +32,7 @@
       <button class="primary" id="add" style="width:100%;margin-top:14px">Add Segment</button>
       <div class="actions" style="margin-top:10px"><button class="secondary" id="loadDefault">Reset Default</button><button class="danger" id="clearCard">Clear Card</button></div>
       <div class="summary-grid"><div class="stat"><span class="muted">Budget</span><b>$138k</b></div><div class="stat"><span class="muted">Target</span><b>150m</b></div></div>
+      <div class="notice" id="broadcastDesk">Broadcast desk not selected yet.</div>
       <div class="warning">Tip: alternate high-energy matches with promos or angles to protect crowd pacing.</div>
       <div class="notice" id="saveMsg">Use Run Show to generate the full night report: wrestler reviews, announcers, commentary, quirks, and consequences.</div>
     </aside>
@@ -47,10 +48,12 @@
     {name:'Main Event',type:'Match',participants:'L. Cross vs. Victor Kane',mins:18}
   ];
   const profileRaw=localStorage.getItem('ringmaster_brand_profile'); let profile=null; try{profile=profileRaw?JSON.parse(profileRaw):null}catch{}
+  const deskRaw=localStorage.getItem('ringmaster_broadcast_team'); let desk=null; try{desk=deskRaw?JSON.parse(deskRaw):null}catch{}
   const savedRaw=localStorage.getItem('ringmaster_booking_card'); let saved=null; try{saved=savedRaw?JSON.parse(savedRaw):null}catch{}
   const segments=Array.isArray(saved)&&saved.length ? saved : defaultSegments.map(s=>({...s}));
   const segEl=document.getElementById('segments'), totalEl=document.getElementById('totalTime'), warnEl=document.getElementById('warnings'), gradeEl=document.getElementById('paceGrade'), meter=document.getElementById('meterFill'), saveMsg=document.getElementById('saveMsg');
   if(profile){document.getElementById('showMeta').textContent=`${profile.show_name||'Prototype event'} • ${profile.country||'US'} • Week ${localStorage.getItem('ringmaster_week')||'1'}`;}
+  if(desk&&desk.announcer&&desk.commentator){document.getElementById('broadcastDesk').innerHTML=`Broadcast desk: <strong>${desk.announcer.name}</strong> announcing, <strong>${desk.commentator.name}</strong> on commentary.`;}
   function paceImpact(s){if(s.type==='Video')return 0;if(s.type==='Promo'||s.type==='Angle')return Math.max(2,Math.round(s.mins*.8));return Math.max(5,Math.round(s.mins*.9));}
   function warnings(list){const total=list.reduce((a,s)=>a+s.mins,0);const out=[];for(let i=1;i<list.length;i++){if(list[i-1].mins>=20&&list[i].mins>=20){out.push('Two long segments back-to-back may hurt crowd pacing');break}}if(total<60)out.push('Card runtime is short; audience may feel under-served');if(total>180)out.push('Card runtime is very long; fatigue risk increased');return out;}
   function save(){localStorage.setItem('ringmaster_booking_card',JSON.stringify(segments));saveMsg.textContent='Booking card saved. Dashboard summary is now updated.';}
