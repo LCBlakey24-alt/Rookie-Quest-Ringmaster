@@ -86,12 +86,7 @@
     };
 
     if (segment.type !== 'Match') {
-      return {
-        boost: 0,
-        audience: 0,
-        notes: ['No direct wrestler intro effect on this non-match segment.'],
-        annoyed: []
-      };
+      return { boost: 0, audience: 0, notes: ['No direct wrestler intro effect on this non-match segment.'], annoyed: [] };
     }
 
     const style = styleBucket(announcer.style);
@@ -122,35 +117,13 @@
       }
     });
 
-    return {
-      boost,
-      audience,
-      notes,
-      annoyed: [...new Set(annoyed)]
-    };
+    return { boost, audience, notes, annoyed: [...new Set(annoyed)] };
   }
 
   function refereeEffect(segment, index, refereeProfile) {
-    const referee = refereeProfile || {
-      name: 'Default Referee',
-      control: 60,
-      accuracy: 60,
-      toughness: 60,
-      drama: 50,
-      quirk: 'Calls the match mostly down the middle.'
-    };
-
+    const referee = refereeProfile || { name: 'Default Referee', control: 60, accuracy: 60, toughness: 60, drama: 50, quirk: 'Calls the match mostly down the middle.' };
     if (segment.type !== 'Match') {
-      return {
-        score: 0,
-        clarity: 0,
-        notes: ['No referee impact on this non-match segment.'],
-        badCall: false,
-        refBump: false,
-        wrongWinner: false,
-        injury: false,
-        annoyed: []
-      };
+      return { score: 0, clarity: 0, notes: ['No referee impact on this non-match segment.'], badCall: false, refBump: false, wrongWinner: false, injury: false, annoyed: [] };
     }
 
     const chaos = seededValue(`${referee.name}-${segment.name}-${index}`, 0, 100);
@@ -168,7 +141,6 @@
       clarity += 3;
       notes.push(`${referee.name} kept the pace controlled and the finish credible.`);
     }
-
     if (referee.accuracy < 50 && chaos > 52) {
       score -= 5;
       clarity -= 6;
@@ -176,7 +148,6 @@
       annoyed = splitParticipants(segment.participants);
       notes.push(`${referee.name} missed a key rope break and the crowd argued with the finish.`);
     }
-
     if (referee.accuracy < 45 && chaos > 78) {
       score -= 8;
       clarity -= 10;
@@ -185,47 +156,104 @@
       annoyed = splitParticipants(segment.participants);
       notes.push(`${referee.name} appeared to count the wrong winner. Production had to scramble to explain it.`);
     }
-
     if (referee.drama > 80 && chaos > 60) {
       score += 3;
       clarity -= 4;
       refBump = true;
       notes.push(`${referee.name} took a dramatic ref bump, which spiked chaos but muddied the finish.`);
     }
-
     if (referee.toughness < 45 && refBump && chaos > 72) {
       score -= 4;
       clarity -= 5;
       injury = true;
       notes.push(`${referee.name} stayed down after the bump and a backup official was needed.`);
     }
-
-    return {
-      score,
-      clarity,
-      notes,
-      badCall,
-      refBump,
-      wrongWinner,
-      injury,
-      annoyed: [...new Set(annoyed)]
-    };
+    return { score, clarity, notes, badCall, refBump, wrongWinner, injury, annoyed: [...new Set(annoyed)] };
   }
 
   function intelEffect(segment, preShowIntel) {
     if (!preShowIntel) return { boost: 0, audience: 0, notes: [] };
     const mentions = String(segment.participants || '').toLowerCase().includes(String(preShowIntel.name || '').toLowerCase());
     if (!mentions) return { boost: 0, audience: 0, notes: [] };
-
     if (preShowIntel.reacted || segment.intelReaction) {
-      return {
-        boost: 2,
-        audience: Number(preShowIntel.fanBonus || 8),
-        notes: [`${preShowIntel.source || 'Pre-show intel'} was addressed. Fans reacted strongly to seeing ${preShowIntel.name}.`]
-      };
+      return { boost: 2, audience: Number(preShowIntel.fanBonus || 8), notes: [`${preShowIntel.source || 'Pre-show intel'} was addressed. Fans reacted strongly to seeing ${preShowIntel.name}.`] };
+    }
+    return { boost: 0, audience: 0, notes: [] };
+  }
+
+  function productionSegmentEffect(segment, index, productionSetup) {
+    const setup = productionSetup || {};
+    const crew = setup.crew || { name: 'Default Crew', camera: 60, timing: 60, director: 60, chaos: 50, cost: 0, quirk: 'Basic production support.' };
+    const equipment = setup.equipment || { name: 'Default Equipment', safety: 60, visuals: 60, reliability: 60, cost: 0, quirk: 'Basic reliable setup.' };
+    const seed = `${crew.name}-${equipment.name}-${segment.name}-${index}`;
+    const roll = seededValue(seed, 0, 100);
+    let score = 0;
+    let audience = 0;
+    let safety = 0;
+    const notes = [];
+    let missedShot = false;
+    let equipmentIssue = false;
+    let stageSave = false;
+
+    if (crew.camera >= 80 && segment.type === 'Match') {
+      score += 2;
+      audience += 1;
+      notes.push(`${crew.name} caught the important reactions and made the action feel bigger.`);
+    } else if (crew.camera < 55 && segment.type === 'Match' && roll > 55) {
+      score -= 4;
+      audience -= 2;
+      missedShot = true;
+      notes.push(`${crew.name} missed a key camera shot, flattening the crowd reaction on broadcast.`);
     }
 
-    return { boost: 0, audience: 0, notes: [] };
+    if (equipment.visuals >= 85 && (segment.type === 'Video' || segment.type === 'Promo' || index === 0)) {
+      score += 3;
+      audience += 2;
+      stageSave = true;
+      notes.push(`${equipment.name} made the presentation feel like a bigger event.`);
+    }
+
+    if ((equipment.safety < 55 || equipment.reliability < 55) && segment.type === 'Match' && roll > 65) {
+      score -= 5;
+      safety -= 5;
+      equipmentIssue = true;
+      notes.push(`${equipment.name} caused a ringside/equipment scare that distracted from the match.`);
+    }
+
+    if (crew.director >= 80 && (segment.type === 'Angle' || segment.type === 'Promo')) {
+      score += 2;
+      notes.push(`${crew.name}'s director helped the segment land cleanly.`);
+    }
+
+    return { score, audience, safety, notes, missedShot, equipmentIssue, stageSave };
+  }
+
+  function productionShowEffects(card, productionSetup) {
+    const setup = productionSetup || {};
+    const crew = setup.crew || { name: 'Default Crew', timing: 60, cost: 0, chaos: 50 };
+    const sponsor = setup.sponsor || { name: 'No Major Sponsor', money: 0, pressure: 0, mentions: 0, fine: 0 };
+    const equipment = setup.equipment || { name: 'Default Equipment', cost: 0, reliability: 60, safety: 60 };
+    const timing = setup.timing || { name: 'Flexible Slot', hardOut: 25, fineRisk: 10, overtimeFine: 0 };
+    const totalMinutes = (Array.isArray(card) ? card : []).reduce((sum, segment) => sum + Number(segment.mins || 0), 0);
+    const targetMinutes = 150;
+    const overrunMinutes = Math.max(0, totalMinutes - targetMinutes);
+    const sponsorMentionsNeeded = Number(sponsor.mentions || 0);
+    const sponsorSegments = (Array.isArray(card) ? card : []).filter((segment) => String(segment.name || '').toLowerCase().includes('sponsor') || String(segment.type || '').toLowerCase().includes('sponsor')).length;
+    const sponsorMentionsMissed = Math.max(0, sponsorMentionsNeeded - sponsorSegments);
+    const overrunFine = overrunMinutes > 0 && Number(timing.fineRisk || 0) > 40 ? Math.round(Number(timing.overtimeFine || 0) * Math.min(2, overrunMinutes / 15)) : 0;
+    const sponsorPenalty = sponsorMentionsMissed > 0 ? Math.round(Number(sponsor.fine || 0) * Math.min(1, sponsorMentionsMissed / Math.max(1, sponsorMentionsNeeded))) : 0;
+    const productionCost = Number(crew.cost || 0) + Number(equipment.cost || 0);
+    const sponsorRevenue = Number(sponsor.money || 0);
+    const notes = [];
+
+    if (overrunMinutes > 0) notes.push(`${timing.name} was pushed ${overrunMinutes} minute(s) over target.`);
+    if (overrunFine > 0) notes.push(`Broadcast timing triggered an overrun fine of $${overrunFine.toLocaleString()}.`);
+    if (sponsorMentionsMissed > 0) notes.push(`${sponsor.name} expected ${sponsorMentionsNeeded} sponsor mention(s), but ${sponsorMentionsMissed} were missed.`);
+    if (sponsorPenalty > 0) notes.push(`Sponsor penalty applied: $${sponsorPenalty.toLocaleString()}.`);
+    if (productionCost > 0) notes.push(`Production and equipment cost $${productionCost.toLocaleString()}.`);
+    if (sponsorRevenue > 0) notes.push(`${sponsor.name} contributed $${sponsorRevenue.toLocaleString()} in sponsor revenue.`);
+
+    return { totalMinutes, targetMinutes, overrunMinutes, overrunFine, sponsorMentionsNeeded, sponsorSegments, sponsorMentionsMissed, sponsorPenalty, productionCost, sponsorRevenue, notes };
   }
 
   function scoreCard(card, context = {}) {
@@ -233,34 +261,21 @@
     const announcer = context.announcerProfile;
     const referee = context.refereeProfile;
     const intel = context.preShowIntel;
+    const production = context.productionSetup;
 
     return safeCard.map((segment, index) => {
       const announcerResult = announcerEffect(segment, announcer);
       const refereeResult = refereeEffect(segment, index, referee);
       const intelResult = intelEffect(segment, intel);
+      const productionResult = productionSegmentEffect(segment, index, production);
       const base = baseSegmentScore(segment, index, safeCard.length);
       const score = clamp(
-        base +
-          announcerResult.boost +
-          announcerResult.audience +
-          refereeResult.score +
-          refereeResult.clarity +
-          intelResult.boost +
-          intelResult.audience,
+        base + announcerResult.boost + announcerResult.audience + refereeResult.score + refereeResult.clarity + intelResult.boost + intelResult.audience + productionResult.score + productionResult.audience + productionResult.safety,
         1,
         99
       );
 
-      return {
-        segment,
-        index,
-        base,
-        score,
-        grade: grade(score),
-        announcerEffect: announcerResult,
-        refereeEffect: refereeResult,
-        intelEffect: intelResult
-      };
+      return { segment, index, base, score, grade: grade(score), announcerEffect: announcerResult, refereeEffect: refereeResult, intelEffect: intelResult, productionEffect: productionResult };
     });
   }
 
@@ -270,106 +285,49 @@
     return Math.round(filtered.reduce((sum, result) => sum + Number(result.score || 0), 0) / filtered.length);
   }
 
-  function buildFallout({ overall = 0, commentary = 60, announcer = 60, referee = 60, preShowIntel = null, lateChanges = 0, annoyedNames = [], badCalls = 0, refInjuries = 0 } = {}) {
-    const fallout = {
-      fanTrust: 0,
-      popularity: 0,
-      morale: 0,
-      storyClarity: 0,
-      cash: 0,
-      notes: []
-    };
+  function buildFallout({ overall = 0, commentary = 60, announcer = 60, referee = 60, preShowIntel = null, lateChanges = 0, annoyedNames = [], badCalls = 0, refInjuries = 0, productionShow = null, productionIncidents = 0, equipmentIncidents = 0 } = {}) {
+    const fallout = { fanTrust: 0, popularity: 0, morale: 0, storyClarity: 0, cash: 0, notes: [] };
 
     if (overall >= 75) {
-      fallout.fanTrust += 4;
-      fallout.popularity += 3;
-      fallout.cash += 18000;
-      fallout.notes.push('Strong show lifted fan trust and ticket demand.');
+      fallout.fanTrust += 4; fallout.popularity += 3; fallout.cash += 18000; fallout.notes.push('Strong show lifted fan trust and ticket demand.');
     } else if (overall < 55) {
-      fallout.fanTrust -= 5;
-      fallout.popularity -= 2;
-      fallout.cash -= 9000;
-      fallout.notes.push('Weak show hurt fan trust.');
+      fallout.fanTrust -= 5; fallout.popularity -= 2; fallout.cash -= 9000; fallout.notes.push('Weak show hurt fan trust.');
     } else {
-      fallout.fanTrust += 1;
-      fallout.cash += 4000;
-      fallout.notes.push('Steady show kept the company moving.');
+      fallout.fanTrust += 1; fallout.cash += 4000; fallout.notes.push('Steady show kept the company moving.');
     }
 
-    if (commentary < 50) {
-      fallout.storyClarity -= 4;
-      fallout.notes.push('Poor commentary damaged story clarity.');
-    } else if (commentary >= 80) {
-      fallout.storyClarity += 3;
-      fallout.notes.push('Strong commentary made the stories clearer.');
-    }
+    if (commentary < 50) { fallout.storyClarity -= 4; fallout.notes.push('Poor commentary damaged story clarity.'); }
+    else if (commentary >= 80) { fallout.storyClarity += 3; fallout.notes.push('Strong commentary made the stories clearer.'); }
 
-    if (referee < 50) {
-      fallout.storyClarity -= 3;
-      fallout.fanTrust -= 2;
-      fallout.notes.push('Poor refereeing damaged finish credibility.');
-    } else if (referee >= 80) {
-      fallout.storyClarity += 2;
-      fallout.notes.push('Strong refereeing protected match finishes.');
-    }
+    if (referee < 50) { fallout.storyClarity -= 3; fallout.fanTrust -= 2; fallout.notes.push('Poor refereeing damaged finish credibility.'); }
+    else if (referee >= 80) { fallout.storyClarity += 2; fallout.notes.push('Strong refereeing protected match finishes.'); }
 
-    if (badCalls) {
-      fallout.fanTrust -= badCalls * 2;
-      fallout.morale -= badCalls * 2;
-      fallout.notes.push('Bad referee calls caused backstage complaints.');
-    }
-
-    if (refInjuries) {
-      fallout.cash -= 5000;
-      fallout.notes.push('Referee injury created medical and production costs.');
-    }
-
-    if (announcer < 50) {
-      fallout.fanTrust -= 1;
-      fallout.notes.push('Weak announcing made the show feel smaller.');
-    }
-
-    if (annoyedNames.length) {
-      fallout.morale -= annoyedNames.length * 2;
-      fallout.notes.push('Staff mistakes annoyed talent backstage.');
-    }
+    if (badCalls) { fallout.fanTrust -= badCalls * 2; fallout.morale -= badCalls * 2; fallout.notes.push('Bad referee calls caused backstage complaints.'); }
+    if (refInjuries) { fallout.cash -= 5000; fallout.notes.push('Referee injury created medical and production costs.'); }
+    if (announcer < 50) { fallout.fanTrust -= 1; fallout.notes.push('Weak announcing made the show feel smaller.'); }
+    if (annoyedNames.length) { fallout.morale -= annoyedNames.length * 2; fallout.notes.push('Staff mistakes annoyed talent backstage.'); }
 
     if (preShowIntel && preShowIntel.reacted) {
-      fallout.fanTrust += 2;
-      fallout.popularity += 1;
-      fallout.morale -= Number(preShowIntel.changeRisk || 4);
-      fallout.cash += Number(preShowIntel.fanBonus || 8) * 700;
-      fallout.notes.push('Reacting to pre-show intel excited fans but created last-minute booking pressure.');
+      fallout.fanTrust += 2; fallout.popularity += 1; fallout.morale -= Number(preShowIntel.changeRisk || 4); fallout.cash += Number(preShowIntel.fanBonus || 8) * 700; fallout.notes.push('Reacting to pre-show intel excited fans but created last-minute booking pressure.');
     }
+    if (preShowIntel && preShowIntel.ignored) { fallout.fanTrust -= 2; fallout.notes.push('Ignoring pre-show intel kept the show stable but cooled some fan buzz.'); }
+    if (lateChanges > 1) { fallout.morale -= 2; fallout.notes.push('Multiple late changes created backstage friction.'); }
 
-    if (preShowIntel && preShowIntel.ignored) {
-      fallout.fanTrust -= 2;
-      fallout.notes.push('Ignoring pre-show intel kept the show stable but cooled some fan buzz.');
+    if (productionShow) {
+      fallout.cash += Number(productionShow.sponsorRevenue || 0) - Number(productionShow.productionCost || 0) - Number(productionShow.overrunFine || 0) - Number(productionShow.sponsorPenalty || 0);
+      fallout.notes.push(...(productionShow.notes || []));
+      if (productionShow.overrunFine > 0) { fallout.fanTrust -= 1; fallout.storyClarity -= 1; }
+      if (productionShow.sponsorPenalty > 0) { fallout.cash -= 0; fallout.notes.push('Sponsor relationship damaged by missed obligations.'); }
     }
-
-    if (lateChanges > 1) {
-      fallout.morale -= 2;
-      fallout.notes.push('Multiple late changes created backstage friction.');
-    }
+    if (productionIncidents) { fallout.storyClarity -= productionIncidents; fallout.notes.push('Production incidents reduced broadcast clarity.'); }
+    if (equipmentIncidents) { fallout.morale -= equipmentIncidents * 2; fallout.cash -= equipmentIncidents * 2500; fallout.notes.push('Equipment issues created safety concerns and repair costs.'); }
 
     return fallout;
   }
 
   window.RingmasterSim = Object.freeze({
-    seededValue,
-    clamp,
-    splitParticipants,
-    grade,
-    momentumState,
-    styleBucket,
-    wrestlerPreference,
-    preferenceLabel,
-    baseSegmentScore,
-    announcerEffect,
-    refereeEffect,
-    intelEffect,
-    scoreCard,
-    averageScore,
-    buildFallout
+    seededValue, clamp, splitParticipants, grade, momentumState, styleBucket, wrestlerPreference, preferenceLabel,
+    baseSegmentScore, announcerEffect, refereeEffect, intelEffect, productionSegmentEffect, productionShowEffects,
+    scoreCard, averageScore, buildFallout
   });
 })();
