@@ -11,13 +11,7 @@
       --green:#37D67A; --amber:#FFB020; --crimson:#C62828;
     }
     * { box-sizing:border-box; }
-    body {
-      margin:0; min-height:100vh; color:var(--text); font-family:Inter,Arial,sans-serif;
-      background:
-        radial-gradient(circle at 72% 18%, rgba(212,175,55,.16), transparent 28%),
-        radial-gradient(circle at 50% 100%, rgba(25,167,165,.12), transparent 35%),
-        linear-gradient(180deg, #060A12, var(--deep) 45%, #080B10);
-    }
+    body { margin:0; min-height:100vh; color:var(--text); font-family:Inter,Arial,sans-serif; background:radial-gradient(circle at 72% 18%, rgba(212,175,55,.16), transparent 28%), radial-gradient(circle at 50% 100%, rgba(25,167,165,.12), transparent 35%), linear-gradient(180deg, #060A12, var(--deep) 45%, #080B10); }
     body:before { content:""; position:fixed; inset:0; pointer-events:none; background:linear-gradient(90deg, transparent 0 8%, rgba(212,175,55,.08) 8.2% 8.35%, transparent 8.6% 91.4%, rgba(212,175,55,.08) 91.65% 91.8%, transparent 92%); opacity:.7; }
     .wrap { max-width:1280px; margin:0 auto; padding:28px; }
     .hero { min-height:560px; display:grid; grid-template-columns:330px 1fr 310px; gap:18px; align-items:stretch; }
@@ -30,35 +24,32 @@
     .status { text-align:right; color:var(--muted); font-size:13px; }
     .status strong { color:var(--gold); font-size:18px; display:block; margin-bottom:4px; }
     .menu { padding:18px; }
-    .menu h2, .news h2, .feature h2 { color:var(--gold); text-transform:uppercase; letter-spacing:.08em; font-size:14px; margin:0 0 14px; }
+    .menu h2, .news h2 { color:var(--gold); text-transform:uppercase; letter-spacing:.08em; font-size:14px; margin:0 0 14px; }
     .btns { display:grid; gap:10px; }
     button { cursor:pointer; border:1px solid rgba(212,175,55,.35); border-radius:12px; padding:13px 14px; font-weight:850; letter-spacing:.03em; text-transform:uppercase; }
     button.primary { color:#091018; background:linear-gradient(135deg,var(--gold),var(--gold-dark)); box-shadow:0 0 24px rgba(212,175,55,.18); }
     button.secondary { color:var(--text); background:linear-gradient(180deg,#232734,#151923); border-color:var(--border); }
     button.secondary:hover { border-color:rgba(212,175,55,.55); }
-    .stage { position:relative; overflow:hidden; display:flex; align-items:flex-end; justify-content:center; padding:24px; background:
-      radial-gradient(circle at 50% 20%, rgba(242,242,242,.22), transparent 16%),
-      radial-gradient(circle at 25% 40%, rgba(77,163,255,.18), transparent 22%),
-      radial-gradient(circle at 75% 38%, rgba(212,175,55,.18), transparent 22%),
-      linear-gradient(180deg, rgba(15,22,37,.72), rgba(6,8,12,.96)); }
+    button.locked { opacity:.72; border-color:rgba(255,176,32,.35); }
+    .stage { position:relative; overflow:hidden; display:flex; align-items:flex-end; justify-content:center; padding:24px; background:radial-gradient(circle at 50% 20%, rgba(242,242,242,.22), transparent 16%), radial-gradient(circle at 25% 40%, rgba(77,163,255,.18), transparent 22%), radial-gradient(circle at 75% 38%, rgba(212,175,55,.18), transparent 22%), linear-gradient(180deg, rgba(15,22,37,.72), rgba(6,8,12,.96)); }
     .stage:before { content:""; position:absolute; inset:18px; border:1px solid rgba(212,175,55,.25); border-radius:16px; }
-    .ring { position:absolute; left:12%; right:12%; bottom:70px; height:120px; border-top:3px solid rgba(212,175,55,.55); border-bottom:3px solid rgba(212,175,55,.22); box-shadow:0 -24px 80px rgba(255,255,255,.08); }
+    .ring-ropes { position:absolute; left:12%; right:12%; bottom:70px; height:120px; border-top:3px solid rgba(212,175,55,.55); border-bottom:3px solid rgba(212,175,55,.22); box-shadow:0 -24px 80px rgba(255,255,255,.08); }
     .silhouette { position:relative; z-index:2; width:115px; height:260px; border-radius:56px 56px 18px 18px; background:linear-gradient(180deg,#1e2836,#05070b); box-shadow:0 0 70px rgba(212,175,55,.18); }
     .silhouette:before { content:""; position:absolute; top:-48px; left:33px; width:50px; height:50px; border-radius:50%; background:#0b1018; }
-    .next { position:absolute; left:34px; bottom:28px; right:34px; z-index:3; display:flex; justify-content:space-between; align-items:center; padding:14px 16px; background:rgba(10,15,24,.88); border:1px solid rgba(212,175,55,.38); border-radius:14px; }
+    .next { position:absolute; left:34px; bottom:28px; right:34px; z-index:3; display:flex; justify-content:space-between; align-items:center; padding:14px 16px; background:rgba(10,15,24,.88); border:1px solid rgba(212,175,55,.38); border-radius:14px; cursor:pointer; }
     .next span { color:var(--muted); font-size:12px; text-transform:uppercase; display:block; }
     .next strong { color:var(--gold); }
     .news { padding:18px; }
     .alert { margin-top:10px; padding:12px; background:rgba(35,39,52,.72); border:1px solid var(--border); border-radius:12px; }
     .alert strong { display:block; color:var(--text); margin-bottom:4px; }
     .alert small { color:var(--muted); line-height:1.35; }
-    .green { border-left:3px solid var(--green); } .red { border-left:3px solid var(--crimson); } .gold { border-left:3px solid var(--gold); }
+    .green { border-left:3px solid var(--green); } .red { border-left:3px solid var(--crimson); } .gold { border-left:3px solid var(--gold); } .amber { border-left:3px solid var(--amber); }
     .feature { grid-column:1 / -1; padding:16px 18px; display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
     .feature .item { background:rgba(35,39,52,.55); border:1px solid var(--border); border-radius:14px; padding:12px; }
     .item b { color:var(--gold); display:block; margin-bottom:5px; }
     .item span { color:var(--muted); font-size:13px; line-height:1.35; }
     .experimental { margin-top:14px; padding-top:14px; border-top:1px solid var(--border); }
-    .log { margin-top:12px; min-height:24px; color:var(--muted); font-size:13px; }
+    .log { margin-top:12px; min-height:24px; color:var(--muted); font-size:13px; line-height:1.35; }
     @media (max-width:980px){ .hero{grid-template-columns:1fr;} .brand,.feature{grid-column:auto;} .feature{grid-template-columns:1fr 1fr;} }
   </style>
 </head>
@@ -66,45 +57,35 @@
   <div class="wrap">
     <main class="hero">
       <section class="panel brand">
-        <div>
-          <div class="logo"><span class="rookie">Rookie Quest:</span><span class="ring">Ringmaster</span></div>
-          <div class="tagline">Build the brand. Book the show. Rule the ring.</div>
-        </div>
-        <div class="status"><strong>Prototype v0.1</strong>Premium wrestling management sim</div>
+        <div><div class="logo"><span class="rookie">Rookie Quest:</span><span class="ring">Ringmaster</span></div><div class="tagline">Build the brand. Book the show. Rule the ring.</div></div>
+        <div class="status"><strong id="profileStatus">No Campaign Loaded</strong><span id="profileSub">Create or select a brand to begin.</span></div>
       </section>
 
       <aside class="panel menu">
         <h2>Command Menu</h2>
         <div class="btns">
-          <button class="primary" id="continueCareer">Continue</button>
+          <button class="primary locked" id="continueCareer">Continue</button>
           <button class="secondary" id="newCareer">New Campaign</button>
+          <button class="secondary" id="selectBrand">Select Existing Brand</button>
           <button class="secondary" id="loadCareer">Load Game</button>
           <button class="secondary" id="sandbox">Sandbox Mode</button>
           <button class="secondary" id="options">Options</button>
         </div>
-        <div class="experimental">
-          <h2>Experimental Screens</h2>
-          <div class="btns">
-            <button class="secondary" id="planner">Weekly Planner</button>
-            <button class="secondary" id="booking">Booking Board</button>
-            <button class="secondary" id="dashboard">Campaign Dashboard</button>
-          </div>
-        </div>
+        <div class="experimental"><h2>Experimental Screens</h2><div class="btns"><button class="secondary" id="planner">Weekly Planner</button><button class="secondary" id="booking">Booking Board</button><button class="secondary" id="dashboard">Campaign Dashboard</button></div></div>
         <div class="log" id="careerLog"></div>
       </aside>
 
       <section class="panel stage">
-        <div class="ring"></div>
-        <div class="silhouette" aria-hidden="true"></div>
-        <div class="next"><div><span>Next Show</span><strong>Mayhem Tour: Capital Collision</strong></div><div>Week 12 →</div></div>
+        <div class="ring-ropes"></div><div class="silhouette" aria-hidden="true"></div>
+        <div class="next" id="nextShowCard"><div><span id="nextLabel">Next Step</span><strong id="nextTitle">Create Your Promotion</strong></div><div>→</div></div>
       </section>
 
       <aside class="panel news">
-        <h2>News Feed</h2>
-        <div class="alert red"><strong>Injury Update</strong><small>Raven Blade is expected to miss 2–3 weeks.</small></div>
-        <div class="alert gold"><strong>Storyline Breakthrough</strong><small>The Dynasty Civil War has gained heat.</small></div>
-        <div class="alert green"><strong>Merch Sales</strong><small>Capital Collision shirts are up 18% this week.</small></div>
-        <div class="alert"><strong>Scout Report</strong><small>Two new prospects are available in the free-agent pool.</small></div>
+        <h2>Campaign Feed</h2>
+        <div class="alert amber" id="flowHint"><strong>Start Here</strong><small>Create or select a fictional promotion, then move into the dashboard and book your first show.</small></div>
+        <div class="alert gold"><strong>Design Locked</strong><small>Premium dark dashboard, gold wrestling presentation, fictional by default.</small></div>
+        <div class="alert green"><strong>Prototype Flow</strong><small>Main Menu → Brand → Dashboard → Booking Board → Weekly Planner.</small></div>
+        <div class="alert"><strong>Save State</strong><small>Prototype progress is currently stored in browser localStorage.</small></div>
       </aside>
 
       <section class="panel feature">
@@ -118,14 +99,36 @@
 
   <script>
     const log = (msg) => document.getElementById('careerLog').textContent = msg;
-    document.getElementById('continueCareer').onclick = () => window.location.href='campaign_dashboard.html';
+    const profileRaw = localStorage.getItem('ringmaster_brand_profile');
+    const cardRaw = localStorage.getItem('ringmaster_booking_card');
+    let profile = null;
+    try { profile = profileRaw ? JSON.parse(profileRaw) : null; } catch { profile = null; }
+
+    function hasCampaign(){ return !!(profile && profile.brand_name); }
+    function routeContinue(){
+      if (!hasCampaign()) { log('No campaign found yet. Create a new campaign or select an existing fictional brand first.'); return; }
+      window.location.href = 'campaign_dashboard.html';
+    }
+
+    if (hasCampaign()) {
+      document.getElementById('profileStatus').textContent = profile.brand_name;
+      document.getElementById('profileSub').textContent = `Home ${profile.country || 'US'} • Week ${localStorage.getItem('ringmaster_week') || '1'}`;
+      document.getElementById('continueCareer').classList.remove('locked');
+      document.getElementById('nextLabel').textContent = cardRaw ? 'Saved Card' : 'Next Show';
+      document.getElementById('nextTitle').textContent = cardRaw ? 'Review Booking Board' : 'Book Your First Show';
+      document.getElementById('flowHint').innerHTML = '<strong>Campaign Ready</strong><small>Continue to the dashboard, review your weekly plan, then book the next show.</small>';
+    }
+
+    document.getElementById('continueCareer').onclick = routeContinue;
     document.getElementById('newCareer').onclick = () => window.location.href='brand_creator.html';
-    document.getElementById('loadCareer').onclick = () => log('Load Game selected: save picker will be wired in a later pass.');
+    document.getElementById('selectBrand').onclick = () => window.location.href='select_brand.html';
+    document.getElementById('loadCareer').onclick = () => log('Load Game selected: file-based save loading will come after the prototype loop is stable.');
     document.getElementById('sandbox').onclick = () => log('Sandbox selected: custom universe setup is planned for a later pass.');
     document.getElementById('options').onclick = () => log('Options selected: settings screen is not built yet.');
     document.getElementById('planner').onclick = () => window.location.href='weekly_planner.html';
     document.getElementById('booking').onclick = () => window.location.href='booking_board.html';
     document.getElementById('dashboard').onclick = () => window.location.href='campaign_dashboard.html';
+    document.getElementById('nextShowCard').onclick = () => hasCampaign() ? window.location.href='booking_board.html' : window.location.href='brand_creator.html';
   </script>
 </body>
 </html>
