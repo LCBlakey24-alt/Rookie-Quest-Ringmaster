@@ -5,231 +5,44 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Rookie Quest: Ringmaster — Brand Creator</title>
   <style>
-    :root {
-      --bg: #0f1115;
-      --panel: #171a21;
-      --text: #e8ecf3;
-      --muted: #a7b0c0;
-      --primary: #4da3ff;
-      --secondary: #37d67a;
-    }
-    body { margin:0; font-family: Inter, Arial, sans-serif; background: var(--bg); color: var(--text); }
-    .wrap { max-width: 1250px; margin: 0 auto; padding: 24px; }
-    .grid { display:grid; grid-template-columns: 430px 1fr; gap: 16px; }
-    .card { background: var(--panel); border:1px solid #2c3140; border-radius: 14px; padding: 16px; }
-    h1,h2 { margin:0 0 12px; }
-    label { display:block; font-size: 14px; color: var(--muted); margin-top: 12px; }
-    input, select { width:100%; margin-top:6px; padding:10px; border-radius:10px; border:1px solid #2c3140; background:#0f131c; color:var(--text); }
-    .row { display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
-    button { margin-top: 14px; width:100%; border:0; border-radius:10px; padding:12px; font-weight:700; color:#091018; background: linear-gradient(135deg,var(--primary),var(--secondary)); cursor:pointer; }
-
-    .preview {
-      min-height: 620px;
-      border-radius: 14px;
-      border: 1px solid #2c3140;
-      background: radial-gradient(circle at 20% 20%, color-mix(in oklab, var(--primary) 25%, #0f1115), #0f1115 45%);
-      overflow: hidden;
-    }
-    .hero { background: linear-gradient(120deg, var(--primary), var(--secondary)); padding: 16px 20px; color:#081018; display:flex; align-items:center; gap:14px; }
-    .hero img { width:58px; height:58px; object-fit:cover; border-radius:8px; border:2px solid rgba(0,0,0,.25); background:#fff; }
-    .hero .title { font-size: 30px; font-weight: 900; line-height: 1; }
-    .hero .sub { font-size: 13px; font-weight: 600; opacity:.8; }
-    .body { padding: 16px; display:grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .panel { background: #171a21cc; border:1px solid #2c3140; border-radius:12px; padding: 12px; }
-    .panel h3 { margin:0 0 8px; font-size:16px; color: var(--primary); }
-    .small { color: var(--muted); font-size: 13px; }
-    .tag { display:inline-block; padding:3px 9px; border-radius:999px; border:1px solid #2c3140; color: var(--muted); font-size:12px; }
-    .line { height: 8px; background: #232734; border-radius: 99px; overflow:hidden; margin-top: 8px; }
-    .line > span { display:block; height:100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); }
+    :root{--deep:#0B1324;--bg:#11151C;--panel:#171A21;--card:#232734;--border:#2C3140;--gold:#D4AF37;--gold-dark:#9B7A20;--text:#F2F2F2;--muted:#A7B0C0;--teal:#19A7A5;--green:#37D67A;--amber:#FFB020;--crimson:#C62828;--primary:#D4AF37;--secondary:#19A7A5}*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#060A12,var(--deep));color:var(--text);font-family:Inter,Arial,sans-serif}.wrap{max-width:1300px;margin:0 auto;padding:24px}.panel{background:rgba(23,26,33,.94);border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:0 16px 48px rgba(0,0,0,.28)}.gold{border-color:rgba(212,175,55,.38)}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px;background:linear-gradient(135deg,rgba(23,26,33,.96),rgba(11,19,36,.95))}h1,h2,h3{margin:0}.title{text-transform:uppercase;letter-spacing:.05em}.title span{color:var(--gold)}.muted,.small{color:var(--muted);font-size:13px}.grid{display:grid;grid-template-columns:440px 1fr;gap:14px}label{display:block;font-size:13px;color:var(--muted);margin-top:12px}input,select{width:100%;margin-top:7px;padding:11px;border-radius:10px;border:1px solid var(--border);background:#0f131c;color:var(--text)}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}button{cursor:pointer;border-radius:10px;padding:11px 13px;font-weight:850;text-transform:uppercase;letter-spacing:.04em;border:1px solid rgba(212,175,55,.35)}.primary-btn{background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#091018}.secondary-btn{background:var(--card);color:var(--text);border-color:var(--border)}.preview{min-height:640px;overflow:hidden;background:radial-gradient(circle at 20% 10%,color-mix(in oklab,var(--primary) 22%,transparent),transparent 30%),linear-gradient(180deg,#101620,#070a10)}.hero{padding:18px 20px;background:linear-gradient(135deg,color-mix(in oklab,var(--primary) 78%,#11151C),color-mix(in oklab,var(--secondary) 55%,#11151C));color:#081018;display:flex;align-items:center;gap:14px}.hero img{width:64px;height:64px;object-fit:cover;border-radius:10px;border:2px solid rgba(0,0,0,.25);background:#fff}.hero .brand-title{font-size:30px;font-weight:1000;text-transform:uppercase;line-height:1}.body{padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:12px}.mini{background:rgba(23,26,33,.86);border:1px solid var(--border);border-radius:14px;padding:14px}.mini h3{color:var(--gold);font-size:15px;text-transform:uppercase;letter-spacing:.06em}.tag{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:4px 9px;color:var(--muted);font-size:12px;margin-top:8px}.line{height:9px;background:#101620;border:1px solid var(--border);border-radius:99px;overflow:hidden;margin-top:8px}.line span{display:block;height:100%;background:linear-gradient(90deg,var(--secondary),var(--primary))}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.full{grid-column:1/-1}.warning{color:var(--amber)}.good{color:var(--green)}@media(max-width:980px){.grid,.body,.row{grid-template-columns:1fr}.top{display:block}.actions{margin-top:12px}}
   </style>
 </head>
 <body>
   <div class="wrap">
-    <h1>Brand Creator (Fictional)</h1>
+    <section class="panel top gold"><div><h1 class="title">Create Your <span>Promotion</span></h1><div class="muted">Build the brand identity before you enter the campaign dashboard.</div></div><div class="actions"><button class="secondary-btn" onclick="window.location.href='main_menu.html'">Main Menu</button><button class="secondary-btn" onclick="window.location.href='select_brand.html'">Select Existing Brand</button></div></section>
     <div class="grid">
-      <section class="card">
-        <h2>Brand Setup</h2>
-        <label>Brand Name
-          <input id="brandName" value="Player Created League" />
-        </label>
-        <label>Home Country
-          <select id="country">
-            <option>US</option><option>CA</option><option>GB</option><option>JP</option><option>IN</option><option>MX</option><option>DE</option><option>BR</option>
-          </select>
-        </label>
-        <div class="row">
-          <label>Primary Colour
-            <input id="primaryColor" type="color" value="#4da3ff" />
-          </label>
-          <label>Secondary Colour
-            <input id="secondaryColor" type="color" value="#37d67a" />
-          </label>
-        </div>
-
-        <div class="row">
-          <label>Starting Cash
-            <input id="startingCash" type="number" min="50000" step="10000" value="500000" />
-          </label>
-          <label>Weekly Shows
-            <input id="weeklyShows" type="number" min="1" max="7" value="2" />
-          </label>
-        </div>
-        <div class="row">
-          <label>Monthly PPVs
-            <input id="monthlyPPVs" type="number" min="0" max="4" value="1" />
-          </label>
-          <label>&nbsp;
-            <input disabled value="Balance auto-evaluated below" />
-          </label>
-        </div>
-        <label>Brand Logo Upload
-          <input id="brandLogo" type="file" accept="image/*" />
-        </label>
-        <label>Flagship Show Name
-          <input id="showName" value="Saturday Clashline" />
-        </label>
-        <label>Show Logo Upload
-          <input id="showLogo" type="file" accept="image/*" />
-        </label>
-
-        <div class="row">
-          <label>PPV Entrance Budget
-            <input id="ppvEntranceBudget" type="number" min="0" step="1000" value="75000" />
-          </label>
-          <label>Wrestler Demand (Top Star)
-            <input id="topStarDemand" type="number" min="0" step="1000" value="45000" />
-          </label>
-        </div>
-        <button id="saveBrand">Save Brand Profile</button>
+      <section class="panel">
+        <h2 style="color:var(--gold)">Brand Setup</h2>
+        <label>Brand Name <input id="brandName" value="Player Created League" /></label>
+        <label>Home Country <select id="country"><option>US</option><option>CA</option><option>GB</option><option>JP</option><option>IN</option><option>MX</option><option>DE</option><option>BR</option></select></label>
+        <div class="row"><label>Primary Colour <input id="primaryColor" type="color" value="#D4AF37" /></label><label>Secondary Colour <input id="secondaryColor" type="color" value="#19A7A5" /></label></div>
+        <div class="row"><label>Starting Cash <input id="startingCash" type="number" min="50000" step="10000" value="500000" /></label><label>Weekly Shows <input id="weeklyShows" type="number" min="1" max="7" value="2" /></label></div>
+        <div class="row"><label>Monthly PPVs <input id="monthlyPPVs" type="number" min="0" max="4" value="1" /></label><label>Flagship Show <input id="showName" value="Saturday Clashline" /></label></div>
+        <label>Brand Logo Upload <input id="brandLogo" type="file" accept="image/*" /></label>
+        <label>Show Logo Upload <input id="showLogo" type="file" accept="image/*" /></label>
+        <div class="row"><label>PPV Entrance Budget <input id="ppvEntranceBudget" type="number" min="0" step="1000" value="75000" /></label><label>Top Star Demand <input id="topStarDemand" type="number" min="0" step="1000" value="45000" /></label></div>
+        <div class="actions"><button class="primary-btn" id="saveBrand">Save Brand Profile</button><button class="secondary-btn" onclick="window.location.href='campaign_dashboard.html'">Open Dashboard</button></div>
         <div id="saveMsg" class="small" style="margin-top:10px;"></div>
       </section>
-
-      <section class="preview" id="previewRoot">
-        <div class="hero">
-          <img id="brandLogoPreview" alt="brand logo" src="../assets/branding/ringmaster_logo.svg" />
-          <div>
-            <div class="title" id="brandTitle">Player Created League</div>
-            <div class="sub" id="brandSub">Global Campaign • Home: US</div>
-          </div>
-        </div>
+      <section class="panel preview gold" id="previewRoot">
+        <div class="hero"><img id="brandLogoPreview" alt="brand logo" src="../assets/branding/ringmaster_logo.svg" /><div><div class="brand-title" id="brandTitle">Player Created League</div><div class="small" id="brandSub" style="color:#101620;font-weight:800">Global Campaign • Home: US</div></div></div>
         <div class="body">
-          <article class="panel">
-            <h3 id="showTitle">Saturday Clashline</h3>
-            <img id="showLogoPreview" alt="show logo" src="../assets/branding/ringmaster_logo.svg" style="width:100%;max-height:120px;object-fit:cover;border-radius:8px;border:1px solid #2c3140;background:#fff;" />
-            <div class="small" style="margin-top:8px;">Flagship show branding and identity block.</div>
-          </article>
-          <article class="panel">
-            <h3>Brand Metrics Preview</h3>
-            <div class="small" id="cadenceSummary">Cadence impact: stable</div>
-            <div class="small" id="entranceSummary" style="margin-top:8px;">Entrance production impact: neutral</div>
-            <span class="tag">Popularity Theme</span>
-            <div class="line"><span style="width:72%"></span></div>
-            <span class="tag" style="margin-top:8px;">Production Grade</span>
-            <div class="line"><span style="width:64%"></span></div>
-            <span class="tag" style="margin-top:8px;">Fan Hype</span>
-            <div class="line"><span style="width:80%"></span></div>
-          </article>
+          <article class="mini"><h3 id="showTitle">Saturday Clashline</h3><img id="showLogoPreview" alt="show logo" src="../assets/branding/ringmaster_logo.svg" style="width:100%;max-height:132px;object-fit:cover;border-radius:10px;border:1px solid var(--border);background:#fff;margin-top:10px" /><div class="small" style="margin-top:10px">Flagship show identity, broadcast package, and event tone.</div></article>
+          <article class="mini"><h3>Brand Metrics Preview</h3><div class="small" id="cadenceSummary">Cadence impact: stable</div><div class="small" id="entranceSummary" style="margin-top:8px;">Entrance production impact: neutral</div><span class="tag">Popularity Theme</span><div class="line"><span style="width:72%"></span></div><span class="tag">Production Grade</span><div class="line"><span style="width:64%"></span></div><span class="tag">Fan Hype</span><div class="line"><span style="width:80%"></span></div></article>
+          <article class="mini full"><h3>Design Promise</h3><div class="small">This promotion uses fictional branding only. No real wrestling companies, logos, or protected talent names should be used in default content.</div></article>
         </div>
       </section>
     </div>
   </div>
-
-  <script>
-    const brandName = document.getElementById('brandName');
-    const country = document.getElementById('country');
-    const showName = document.getElementById('showName');
-    const primary = document.getElementById('primaryColor');
-    const secondary = document.getElementById('secondaryColor');
-    const brandLogo = document.getElementById('brandLogo');
-    const startingCash = document.getElementById('startingCash');
-    const weeklyShows = document.getElementById('weeklyShows');
-    const monthlyPPVs = document.getElementById('monthlyPPVs');
-    const ppvEntranceBudget = document.getElementById('ppvEntranceBudget');
-    const topStarDemand = document.getElementById('topStarDemand');
-    const showLogo = document.getElementById('showLogo');
-
-    const brandTitle = document.getElementById('brandTitle');
-    const brandSub = document.getElementById('brandSub');
-    const showTitle = document.getElementById('showTitle');
-    const brandLogoPreview = document.getElementById('brandLogoPreview');
-    const showLogoPreview = document.getElementById('showLogoPreview');
-    const cadenceSummary = document.getElementById('cadenceSummary');
-    const entranceSummary = document.getElementById('entranceSummary');
-
-    function applyTheme() {
-      document.documentElement.style.setProperty('--primary', primary.value);
-      document.documentElement.style.setProperty('--secondary', secondary.value);
-      brandTitle.textContent = brandName.value || 'Unnamed League';
-      brandSub.textContent = `Global Campaign • Home: ${country.value}`;
-      showTitle.textContent = showName.value || 'Unnamed Show';
-
-      const ws = Number(weeklyShows.value || 0);
-      const ppv = Number(monthlyPPVs.value || 0);
-      const workloadPenalty = ws > 3 ? (ws - 3) * 4.5 : 0;
-      const ppvPenalty = ppv > 1 ? (ppv - 1) * 6.0 : 0;
-      const total = workloadPenalty + ppvPenalty;
-      const trust = -(total * 0.35).toFixed(2);
-      cadenceSummary.textContent = `Cadence impact — Shows: ${ws}/week, PPVs: ${ppv}/month, Penalty: ${total.toFixed(2)}, Fan trust delta: ${trust}`;
-
-      const eb = Number(ppvEntranceBudget.value || 0);
-      const demand = Number(topStarDemand.value || 0);
-      const leftover = eb - demand;
-      const morale = leftover < 0 ? (-Math.abs(leftover)/10000).toFixed(2) : '+0.00';
-      const crowd = leftover > 0 ? (Math.min(6, leftover/15000)).toFixed(2) : '0.00';
-      entranceSummary.textContent = `Entrance production — Budget: $${eb.toLocaleString()}, Top-star demand: $${demand.toLocaleString()}, Crowd bonus: +${crowd}, Morale delta: ${morale}`;
-    }
-
-    function loadImage(input, target) {
-      const file = input.files && input.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = () => { target.src = reader.result; };
-      reader.readAsDataURL(file);
-    }
-
-    [brandName, country, showName, primary, secondary, startingCash, weeklyShows, monthlyPPVs, ppvEntranceBudget, topStarDemand].forEach(el => el.addEventListener('input', applyTheme));
-    brandLogo.addEventListener('change', () => loadImage(brandLogo, brandLogoPreview));
-    showLogo.addEventListener('change', () => loadImage(showLogo, showLogoPreview));
-
-    document.getElementById('saveBrand').addEventListener('click', () => {
-      const payload = {
-        brand_name: brandName.value,
-        country: country.value,
-        primary_color: primary.value,
-        secondary_color: secondary.value,
-        show_name: showName.value,
-        starting_cash: Number(startingCash.value || 0),
-        weekly_shows: Number(weeklyShows.value || 0),
-        monthly_ppvs: Number(monthlyPPVs.value || 0),
-        ppv_entrance_budget: Number(ppvEntranceBudget.value || 0),
-        top_star_demand: Number(topStarDemand.value || 0),
-        brand_logo: brandLogoPreview.src,
-        show_logo: showLogoPreview.src,
-      };
-      localStorage.setItem('ringmaster_brand_profile', JSON.stringify(payload));
-      document.getElementById('saveMsg').textContent = 'Saved to local profile. Next step: wire into campaign + savegame data layer.';
-    });
-
-    // load previous profile if present
-    const existing = localStorage.getItem('ringmaster_brand_profile');
-    if (existing) {
-      try {
-        const p = JSON.parse(existing);
-        brandName.value = p.brand_name || brandName.value;
-        country.value = p.country || country.value;
-        primary.value = p.primary_color || primary.value;
-        secondary.value = p.secondary_color || secondary.value;
-        showName.value = p.show_name || showName.value;
-        startingCash.value = p.starting_cash || startingCash.value;
-        weeklyShows.value = p.weekly_shows || weeklyShows.value;
-        monthlyPPVs.value = p.monthly_ppvs || monthlyPPVs.value;
-        ppvEntranceBudget.value = p.ppv_entrance_budget || ppvEntranceBudget.value;
-        topStarDemand.value = p.top_star_demand || topStarDemand.value;
-        if (p.brand_logo) brandLogoPreview.src = p.brand_logo;
-        if (p.show_logo) showLogoPreview.src = p.show_logo;
-      } catch {}
-    }
-    applyTheme();
-  </script>
+<script>
+  const brandName=document.getElementById('brandName'),country=document.getElementById('country'),showName=document.getElementById('showName'),primary=document.getElementById('primaryColor'),secondary=document.getElementById('secondaryColor'),brandLogo=document.getElementById('brandLogo'),startingCash=document.getElementById('startingCash'),weeklyShows=document.getElementById('weeklyShows'),monthlyPPVs=document.getElementById('monthlyPPVs'),ppvEntranceBudget=document.getElementById('ppvEntranceBudget'),topStarDemand=document.getElementById('topStarDemand'),showLogo=document.getElementById('showLogo');
+  const brandTitle=document.getElementById('brandTitle'),brandSub=document.getElementById('brandSub'),showTitle=document.getElementById('showTitle'),brandLogoPreview=document.getElementById('brandLogoPreview'),showLogoPreview=document.getElementById('showLogoPreview'),cadenceSummary=document.getElementById('cadenceSummary'),entranceSummary=document.getElementById('entranceSummary');
+  function applyTheme(){document.documentElement.style.setProperty('--primary',primary.value);document.documentElement.style.setProperty('--secondary',secondary.value);brandTitle.textContent=brandName.value||'Unnamed League';brandSub.textContent=`Global Campaign • Home: ${country.value}`;showTitle.textContent=showName.value||'Unnamed Show';const ws=Number(weeklyShows.value||0),ppv=Number(monthlyPPVs.value||0);const total=(ws>3?(ws-3)*4.5:0)+(ppv>1?(ppv-1)*6:0);const trust=-(total*.35).toFixed(2);cadenceSummary.innerHTML=`Cadence impact — Shows: ${ws}/week, PPVs: ${ppv}/month, Penalty: <span class="${total?'warning':'good'}">${total.toFixed(2)}</span>, Fan trust: ${trust}`;const eb=Number(ppvEntranceBudget.value||0),demand=Number(topStarDemand.value||0);const leftover=eb-demand;const morale=leftover<0?(-Math.abs(leftover)/10000).toFixed(2):'+0.00';const crowd=leftover>0?Math.min(6,leftover/15000).toFixed(2):'0.00';entranceSummary.innerHTML=`Entrance production — Budget: $${eb.toLocaleString()}, Demand: $${demand.toLocaleString()}, Crowd bonus: +${crowd}, Morale: ${morale}`;}
+  function loadImage(input,target){const file=input.files&&input.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{target.src=reader.result};reader.readAsDataURL(file)}
+  [brandName,country,showName,primary,secondary,startingCash,weeklyShows,monthlyPPVs,ppvEntranceBudget,topStarDemand].forEach(el=>el.addEventListener('input',applyTheme));brandLogo.addEventListener('change',()=>loadImage(brandLogo,brandLogoPreview));showLogo.addEventListener('change',()=>loadImage(showLogo,showLogoPreview));
+  document.getElementById('saveBrand').addEventListener('click',()=>{const payload={brand_name:brandName.value,country:country.value,primary_color:primary.value,secondary_color:secondary.value,show_name:showName.value,starting_cash:Number(startingCash.value||0),weekly_shows:Number(weeklyShows.value||0),monthly_ppvs:Number(monthlyPPVs.value||0),ppv_entrance_budget:Number(ppvEntranceBudget.value||0),top_star_demand:Number(topStarDemand.value||0),brand_logo:brandLogoPreview.src,show_logo:showLogoPreview.src};localStorage.setItem('ringmaster_brand_profile',JSON.stringify(payload));document.getElementById('saveMsg').textContent='Saved to local profile. Open the dashboard to continue.'});
+  const existing=localStorage.getItem('ringmaster_brand_profile');if(existing){try{const p=JSON.parse(existing);brandName.value=p.brand_name||brandName.value;country.value=p.country||country.value;primary.value=p.primary_color||primary.value;secondary.value=p.secondary_color||secondary.value;showName.value=p.show_name||showName.value;startingCash.value=p.starting_cash||startingCash.value;weeklyShows.value=p.weekly_shows||weeklyShows.value;monthlyPPVs.value=p.monthly_ppvs||monthlyPPVs.value;ppvEntranceBudget.value=p.ppv_entrance_budget||ppvEntranceBudget.value;topStarDemand.value=p.top_star_demand||topStarDemand.value;if(p.brand_logo)brandLogoPreview.src=p.brand_logo;if(p.show_logo)showLogoPreview.src=p.show_logo}catch{}}applyTheme();
+</script>
 </body>
 </html>
