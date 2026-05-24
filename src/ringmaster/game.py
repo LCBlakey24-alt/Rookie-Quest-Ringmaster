@@ -12,6 +12,26 @@ class BookingSlot:
     wrestler_a: Wrestler
     wrestler_b: Wrestler
     outcome: MatchOutcome
+    winner_id: str | None = None
+    finish_type: str | None = None
+    loser_protected: bool = False
+    storyline_id: str | None = None
+
+    def resolved_winner_id(self) -> str | None:
+        """Return the winner for legacy slots and explicit modern bookings.
+
+        Older prototype code only stored an outcome, so by default decisive finishes
+        are treated as wrestler_a winning. DQ/no-contest finishes are non-decisive
+        unless a winner_id is explicitly supplied by newer booking flows.
+        """
+        if self.winner_id:
+            return self.winner_id
+        if self.outcome in {MatchOutcome.CLEAN, MatchOutcome.DIRTY, MatchOutcome.ROLL_UP}:
+            return self.wrestler_a.id
+        return None
+
+    def is_clean_finish(self) -> bool:
+        return self.outcome == MatchOutcome.CLEAN
 
 
 class WeeklyShow:
