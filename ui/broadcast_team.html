@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Rookie Quest: Ringmaster — Broadcast Team</title>
+  <style>
+    :root{--deep:#0B1324;--panel:#171A21;--card:#232734;--border:#2C3140;--gold:#D4AF37;--gold-dark:#9B7A20;--text:#F2F2F2;--muted:#A7B0C0;--teal:#19A7A5;--green:#37D67A;--amber:#FFB020;--crimson:#C62828}*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#060A12,var(--deep));color:var(--text);font-family:Inter,Arial,sans-serif}.wrap{max-width:1320px;margin:0 auto;padding:24px}.panel{background:rgba(23,26,33,.94);border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:0 16px 48px rgba(0,0,0,.28)}.gold{border-color:rgba(212,175,55,.38)}.top{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:14px;background:linear-gradient(135deg,rgba(23,26,33,.97),rgba(11,19,36,.95))}h1,h2,h3{margin:0}.title{text-transform:uppercase;letter-spacing:.05em}.title span{color:var(--gold)}.muted,.small{color:var(--muted);font-size:13px}.actions{display:flex;gap:10px;flex-wrap:wrap}button{cursor:pointer;border-radius:10px;padding:11px 13px;font-weight:850;text-transform:uppercase;letter-spacing:.04em;border:1px solid rgba(212,175,55,.35)}.primary{background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#091018}.secondary{background:var(--card);color:var(--text);border-color:var(--border)}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.staff{margin-top:12px;background:rgba(35,39,52,.72);border:1px solid var(--border);border-radius:14px;padding:14px}.staff.selected{border-color:var(--gold);box-shadow:0 0 24px rgba(212,175,55,.12)}.staff-head{display:flex;justify-content:space-between;gap:12px}.name{font-size:18px;font-weight:950}.score{font-size:28px;font-weight:1000;color:var(--gold)}.pill{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:4px 9px;color:var(--muted);font-size:12px;margin:7px 6px 0 0}.bar{height:9px;background:#101620;border:1px solid var(--border);border-radius:99px;overflow:hidden;margin-top:9px}.bar span{display:block;height:100%;background:linear-gradient(90deg,var(--crimson),var(--amber),var(--gold),var(--teal));width:50%}.preview{margin-top:14px}.row{display:flex;justify-content:space-between;border-bottom:1px solid rgba(44,49,64,.75);padding:8px 0}.row b{color:var(--gold)}@media(max-width:900px){.grid{grid-template-columns:1fr}.top{display:block}.actions{margin-top:12px}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <section class="panel top gold">
+    <div><h1 class="title">Broadcast <span>Team</span></h1><div class="small">Pick the voices that shape tonight's show review, commentary quality, and weird broadcast quirks.</div></div>
+    <div class="actions"><button class="secondary" onclick="window.location.href='campaign_dashboard.html'">Dashboard</button><button class="secondary" onclick="window.location.href='booking_board.html'">Booking Board</button><button class="primary" id="saveReturn">Save + Return</button></div>
+  </section>
+
+  <div class="grid">
+    <section class="panel gold"><h2>Ring Announcers</h2><div class="small">Presentation, crowd hype, name delivery, and big-fight atmosphere.</div><div id="announcers"></div></section>
+    <section class="panel gold"><h2>Commentators</h2><div class="small">Story clarity, wrestling knowledge, chemistry, and tendency to go wildly off-topic.</div><div id="commentators"></div></section>
+  </div>
+
+  <section class="panel preview"><h2 style="color:var(--gold)">Selected Broadcast Desk</h2><div class="row"><span>Announcer</span><b id="selectedAnnouncer">None</b></div><div class="row"><span>Commentary Lead</span><b id="selectedCommentator">None</b></div><div class="small" id="deskNote" style="margin-top:12px">Choose one announcer and one commentator to shape the night report.</div></section>
+</div>
+<script>
+  const announcers=[
+    {id:'a_mara_gold',name:'Mara Gold',style:'Big-event voice',hype:88,clarity:80,professionalism:82,quirk:'Turns every title match into a historic coronation.'},
+    {id:'a_benji_bell',name:'Benji Bell',style:'Local sports announcer',hype:63,clarity:72,professionalism:68,quirk:'Accidentally over-pronounces dramatic nicknames.'},
+    {id:'a_victor_velvet',name:'Victor Velvet',style:'Showbiz ringmaster',hype:76,clarity:58,professionalism:54,quirk:'Adds unnecessary pauses like he is announcing a magic trick.'},
+    {id:'a_owen_clipboard',name:'Owen Clipboard',style:'Nervous official',hype:41,clarity:66,professionalism:70,quirk:'Reads the card like a council meeting agenda.'}
+  ];
+  const commentators=[
+    {id:'c_jess_graves',name:'Jess Graves',style:'Story analyst',knowledge:86,focus:82,chemistry:78,quirk:'Finds a long-term callback in nearly everything.'},
+    {id:'c_mick_static',name:'Mick Static',style:'Excitable colour commentator',knowledge:68,focus:52,chemistry:85,quirk:'Screams about momentum even during slow chain wrestling.'},
+    {id:'c_tony_teabreak',name:'Tony Teabreak',style:'Old-school veteran',knowledge:76,focus:38,chemistry:62,quirk:'Will compare any match to a hotel breakfast if given time.'},
+    {id:'c_lena_lariat',name:'Lena Lariat',style:'Technical specialist',knowledge:91,focus:74,chemistry:64,quirk:'Explains holds so well the crowd almost learns something.'}
+  ];
+  let selected=JSON.parse(localStorage.getItem('ringmaster_broadcast_team')||'{}');
+  selected.announcerId=selected.announcerId||announcers[0].id; selected.commentatorId=selected.commentatorId||commentators[0].id;
+  function avgA(a){return Math.round((a.hype+a.clarity+a.professionalism)/3)} function avgC(c){return Math.round((c.knowledge+c.focus+c.chemistry)/3)}
+  function card(person,type){const score=type==='announcer'?avgA(person):avgC(person);const selectedClass=(type==='announcer'?selected.announcerId:selected.commentatorId)===person.id?' selected':'';return `<article class="staff${selectedClass}"><div class="staff-head"><div><div class="name">${person.name}</div><span class="pill">${person.style}</span></div><div class="score">${score}</div></div><div class="bar"><span style="width:${score}%"></span></div><div class="small" style="margin-top:9px">${person.quirk}</div><button class="secondary" data-type="${type}" data-id="${person.id}" style="margin-top:10px">Select</button></article>`}
+  function render(){document.getElementById('announcers').innerHTML=announcers.map(a=>card(a,'announcer')).join('');document.getElementById('commentators').innerHTML=commentators.map(c=>card(c,'commentator')).join('');const a=announcers.find(x=>x.id===selected.announcerId);const c=commentators.find(x=>x.id===selected.commentatorId);document.getElementById('selectedAnnouncer').textContent=a?a.name:'None';document.getElementById('selectedCommentator').textContent=c?c.name:'None';document.getElementById('deskNote').textContent=a&&c?`${a.quirk} ${c.quirk}`:'Choose a full desk.';document.querySelectorAll('[data-type]').forEach(btn=>btn.onclick=()=>{if(btn.dataset.type==='announcer')selected.announcerId=btn.dataset.id;else selected.commentatorId=btn.dataset.id;save(false);render()})}
+  function save(showMsg=true){const a=announcers.find(x=>x.id===selected.announcerId);const c=commentators.find(x=>x.id===selected.commentatorId);localStorage.setItem('ringmaster_broadcast_team',JSON.stringify({announcerId:selected.announcerId,commentatorId:selected.commentatorId,announcer:a,commentator:c}));if(showMsg)document.getElementById('deskNote').textContent='Broadcast team saved for the next night report.';}
+  document.getElementById('saveReturn').onclick=()=>{save(false);window.location.href='booking_board.html'};
+  render();save(false);
+</script>
+</body>
+</html>
