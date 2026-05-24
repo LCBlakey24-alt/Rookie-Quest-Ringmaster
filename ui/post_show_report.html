@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Rookie Quest: Ringmaster — Post-Show Report</title>
+  <style>
+    :root{--deep:#0B1324;--bg:#11151C;--panel:#171A21;--card:#232734;--border:#2C3140;--gold:#D4AF37;--gold-dark:#9B7A20;--text:#F2F2F2;--muted:#A7B0C0;--teal:#19A7A5;--green:#37D67A;--amber:#FFB020;--crimson:#C62828}*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#060A12,var(--deep));color:var(--text);font-family:Inter,Arial,sans-serif}.wrap{max-width:1420px;margin:0 auto;padding:22px}.panel{background:rgba(23,26,33,.94);border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:0 16px 48px rgba(0,0,0,.28)}.gold{border-color:rgba(212,175,55,.38)}.top{display:flex;justify-content:space-between;gap:16px;align-items:center;background:linear-gradient(135deg,rgba(23,26,33,.97),rgba(11,19,36,.95));margin-bottom:14px}h1,h2,h3{margin:0}.title{text-transform:uppercase;letter-spacing:.05em}.title span{color:var(--gold)}.muted,.small{color:var(--muted);font-size:13px}.actions{display:flex;gap:10px;flex-wrap:wrap}button{cursor:pointer;border-radius:10px;padding:11px 13px;font-weight:850;text-transform:uppercase;letter-spacing:.04em;border:1px solid rgba(212,175,55,.35)}.primary{background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#091018}.secondary{background:var(--card);color:var(--text);border-color:var(--border)}.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:14px}.kpi{position:relative;overflow:hidden}.kpi .label{text-transform:uppercase;color:var(--muted);font-size:11px;letter-spacing:.08em}.kpi .value{font-size:30px;font-weight:1000;margin-top:6px}.kpi.good .value{color:var(--green)}.kpi.warn .value{color:var(--amber)}.kpi.bad .value{color:var(--crimson)}.layout{display:grid;grid-template-columns:1fr 360px;gap:14px}.match{background:rgba(35,39,52,.7);border:1px solid var(--border);border-radius:14px;padding:14px;margin-top:12px}.match-head{display:flex;justify-content:space-between;gap:12px;align-items:start}.match-title{font-size:18px;font-weight:950}.score{color:var(--gold);font-size:24px;font-weight:1000}.pill{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:4px 9px;color:var(--muted);font-size:12px;margin:6px 6px 0 0}.review{line-height:1.55;color:#dfe4ee;margin-top:10px}.note{border-left:3px solid var(--gold);padding:10px 12px;background:rgba(212,175,55,.06);border-radius:10px;margin-top:10px;color:var(--muted)}.side-card{margin-top:12px;background:rgba(35,39,52,.72);border:1px solid var(--border);border-radius:14px;padding:14px}.side-card h3{color:var(--gold);text-transform:uppercase;font-size:14px;letter-spacing:.06em}.bar{height:9px;background:#101620;border:1px solid var(--border);border-radius:99px;overflow:hidden;margin-top:8px}.bar span{display:block;height:100%;background:linear-gradient(90deg,var(--crimson),var(--amber),var(--gold),var(--teal));width:50%}.quirk{margin-top:9px;padding:10px;border-radius:10px;background:rgba(17,21,28,.75);border:1px solid var(--border);color:var(--muted);line-height:1.45}.tag-good{color:var(--green)}.tag-warn{color:var(--amber)}.tag-bad{color:var(--crimson)}@media(max-width:1050px){.layout{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}.top{display:block}.actions{margin-top:12px}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <section class="panel top gold">
+    <div><h1 class="title">Post-Show <span>Night Report</span></h1><div class="small" id="showMeta">Reviewing tonight's show performance</div></div>
+    <div class="actions"><button class="secondary" onclick="window.location.href='booking_board.html'">Edit Card</button><button class="secondary" onclick="window.location.href='campaign_dashboard.html'">Dashboard</button><button class="primary" id="advanceWeek">Advance Week</button></div>
+  </section>
+
+  <section class="kpis">
+    <div class="panel kpi" id="overallCard"><div class="label">Overall Show</div><div class="value" id="overallScore">--</div><div class="small" id="overallGrade">Awaiting card</div></div>
+    <div class="panel kpi"><div class="label">Crowd Mood</div><div class="value" id="crowdMood">--</div><div class="small">Live audience response</div></div>
+    <div class="panel kpi"><div class="label">Wrestler Review</div><div class="value" id="wrestlerScore">--</div><div class="small">In-ring delivery</div></div>
+    <div class="panel kpi"><div class="label">Announcers</div><div class="value" id="announcerScore">--</div><div class="small">Presenter quality</div></div>
+    <div class="panel kpi"><div class="label">Commentary</div><div class="value" id="commentaryScore">--</div><div class="small">Story support</div></div>
+  </section>
+
+  <div class="layout">
+    <main class="panel gold">
+      <h2>Segment-by-Segment Breakdown</h2>
+      <div class="small">Each segment gets a review, performance note, crowd response, and possible knock-on effect.</div>
+      <div id="matchReports"></div>
+    </main>
+
+    <aside>
+      <section class="panel">
+        <h2 style="color:var(--gold)">Broadcast Team Review</h2>
+        <div class="side-card"><h3>Announcer Review</h3><div class="review" id="announcerReview"></div><div class="bar"><span id="announcerBar"></span></div></div>
+        <div class="side-card"><h3>Commentary Review</h3><div class="review" id="commentaryReview"></div><div class="bar"><span id="commentaryBar"></span></div></div>
+        <div class="side-card"><h3>Fun Quirks</h3><div id="quirkList"></div></div>
+      </section>
+
+      <section class="panel" style="margin-top:14px">
+        <h2 style="color:var(--gold)">Consequences</h2>
+        <div id="consequenceList"></div>
+      </section>
+    </aside>
+  </div>
+</div>
+<script>
+  const profileRaw=localStorage.getItem('ringmaster_brand_profile');
+  const cardRaw=localStorage.getItem('ringmaster_booking_card');
+  let profile=null, card=[];
+  try{profile=profileRaw?JSON.parse(profileRaw):null}catch{}
+  try{card=cardRaw?JSON.parse(cardRaw):[]}catch{}
+  if(profile){document.getElementById('showMeta').textContent=`${profile.show_name||'Tonight'} • ${profile.country||'US'} • Week ${localStorage.getItem('ringmaster_week')||'1'}`;}
+
+  function seededValue(text, min, max){let hash=0;for(let i=0;i<text.length;i++)hash=(hash*31+text.charCodeAt(i))%100000;return min+(hash%(max-min+1));}
+  function scoreSegment(s, index){const base=s.type==='Match'?62:s.type==='Promo'?56:s.type==='Angle'?52:48;const lengthBonus=Math.min(12,Math.max(-8,Number(s.mins||0)-8));const nameBonus=seededValue(`${s.name}${s.participants}`, -7, 12);const cardPos=index===card.length-1?8:index===0?3:0;return Math.max(18,Math.min(99,base+lengthBonus+nameBonus+cardPos));}
+  function grade(score){if(score>=85)return ['Excellent','good'];if(score>=70)return ['Strong','good'];if(score>=55)return ['Mixed','warn'];return ['Weak','bad'];}
+  function reviewFor(s,score,index){const [g]=grade(score);if(s.type==='Match'){if(score>=80)return `${s.participants} delivered a standout ${s.name.toLowerCase()}, with the crowd buying into the key near falls and the finish landing cleanly.`;if(score>=60)return `${s.participants} worked a solid ${s.name.toLowerCase()}, though the middle stretch needed more urgency.`;return `${s.participants} struggled to pull the audience into the match. Timing felt loose and the finish did not fully connect.`;}if(s.type==='Promo'){return score>=70?`${s.participants} moved the story forward with a confident promo and gave next week a clear hook.`:`The promo had useful story information, but the delivery wandered and the crowd cooled before the final line.`;}if(s.type==='Angle'){return score>=70?`The angle gave the show some character and created a useful talking point for the next card.`:`The angle was clear enough, but it felt more like filler than a true turning point.`;}return `The ${s.name.toLowerCase()} helped presentation, but its impact depended heavily on the segments around it. Grade: ${g}.`;}
+  function wrestlerNote(s,score){if(s.type!=='Match')return 'Non-match segment: wrestler review focused on presence, timing, and story clarity.';if(score>=80)return 'Wrestler review: big confidence boost. The workers looked sharp and should gain momentum.';if(score>=60)return 'Wrestler review: dependable showing. No major harm, but nobody exploded into stardom tonight.';return 'Wrestler review: rough night. Consider lowering risk, changing opponent chemistry, or protecting them with promos next week.';}
+
+  if(!Array.isArray(card)||!card.length){card=[{name:'No Card Saved',type:'Angle',participants:'Open the booking board to create tonight\'s show',mins:5}];}
+  const scores=card.map(scoreSegment);const avg=Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);const wrestlerAvg=Math.round(scores.filter((_,i)=>card[i].type==='Match').reduce((a,b)=>a+b,0)/Math.max(1,card.filter(s=>s.type==='Match').length));
+  const announcer=seededValue(`${profile?.brand_name||'default'}announcer${card.length}`,38,94);const commentary=seededValue(`${profile?.brand_name||'default'}commentary${scores.join('-')}`,32,96);
+  document.getElementById('overallScore').textContent=avg;document.getElementById('crowdMood').textContent=avg>=75?'Hot':avg>=55?'Split':'Cold';document.getElementById('wrestlerScore').textContent=wrestlerAvg;document.getElementById('announcerScore').textContent=announcer;document.getElementById('commentaryScore').textContent=commentary;
+  document.getElementById('overallGrade').textContent=grade(avg)[0];document.getElementById('overallCard').classList.add(grade(avg)[1]);
+
+  document.getElementById('matchReports').innerHTML=card.map((s,i)=>{const sc=scores[i];const [g,cls]=grade(sc);return `<article class="match"><div class="match-head"><div><div class="match-title">${i+1}. ${s.name}</div><span class="pill">${s.type}</span><span class="pill">${s.participants}</span><span class="pill">${s.mins} mins</span></div><div class="score ${cls==='good'?'tag-good':cls==='warn'?'tag-warn':'tag-bad'}">${sc}</div></div><div class="review">${reviewFor(s,sc,i)}</div><div class="note">${wrestlerNote(s,sc)}</div></article>`}).join('');
+
+  function announcerText(score){if(score>=80)return 'The ring announcer gave the show a real big-event feel. Names felt important, the main event introduction had weight, and the crowd reacted to the presentation.';if(score>=60)return 'The announcing was serviceable. Clear enough, but some introductions lacked punch and the bigger moments could have used more theatre.';return 'The announcer had a rough night. Several names felt rushed, one hometown detail was missed, and the crowd never got the sense that the main event was truly huge.';}
+  function commentaryText(score){if(score>=80)return 'Commentary strengthened the stories all night. They reinforced grudges, explained motivations, and made the big moments feel earned.';if(score>=60)return 'Commentary mostly stayed on track, though there were a few quiet stretches where the table repeated itself rather than adding story depth.';return 'Commentary drifted badly. At one point they spent nearly a full minute debating hotel breakfast while a comeback was happening in the ring.';}
+  document.getElementById('announcerReview').textContent=announcerText(announcer);document.getElementById('commentaryReview').textContent=commentaryText(commentary);document.getElementById('announcerBar').style.width=`${announcer}%`;document.getElementById('commentaryBar').style.width=`${commentary}%`;
+
+  const quirks=[];if(commentary<45)quirks.push('The commentary desk went off-topic during a rest hold and somehow ended up ranking motorway service stations.');if(announcer<45)quirks.push('The announcer introduced one wrestler with the energy of someone reading a shopping receipt.');if(avg>80)quirks.push('The crowd stayed hot enough that even the video package got a chant.');if(card.some(s=>Number(s.mins)>=20))quirks.push('One segment ran long enough that production started nervously checking the hard-out time.');if(!quirks.length)quirks.push('No major disasters, which in wrestling counts as a minor miracle.');document.getElementById('quirkList').innerHTML=quirks.map(q=>`<div class="quirk">${q}</div>`).join('');
+
+  const consequences=[];if(avg>=75)consequences.push(['good','Fan trust rises','The audience felt they got a proper show and will be more forgiving next week.']);else if(avg<55)consequences.push(['danger','Fan trust drops','The crowd left flat. Next week needs a stronger hook or a safer main event.']);if(commentary<50)consequences.push(['warn','Commentary concern','Poor commentary reduced story clarity. Consider upgrading announcers or simplifying angles.']);if(wrestlerAvg>=75)consequences.push(['good','Momentum boost','Top in-ring performers should gain popularity from tonight.']);if(card.length<4)consequences.push(['warn','Thin card','The show felt light. Add more variety next time.']);document.getElementById('consequenceList').innerHTML=consequences.map(([type,title,text])=>`<div class="alert ${type}"><strong>${title}</strong><small>${text}</small></div>`).join('')||'<div class="alert good"><strong>Stable Night</strong><small>No major negative consequences from tonight.</small></div>';
+
+  document.getElementById('advanceWeek').onclick=()=>{const next=Number(localStorage.getItem('ringmaster_week')||'1')+1;localStorage.setItem('ringmaster_week',String(next));localStorage.setItem('ringmaster_last_show_report',JSON.stringify({overall:avg,wrestler:wrestlerAvg,announcer,commentary,card,week:next-1}));window.location.href='campaign_dashboard.html';};
+</script>
+</body>
+</html>
