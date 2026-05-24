@@ -10,6 +10,27 @@ Build the definitive pro wrestling management sim where players can:
 - manage morale, locker room politics, injuries, and contracts,
 - balance creative risk with financial sustainability.
 
+## UI Design Direction
+
+Rookie Quest: Ringmaster now has a locked visual direction for the v0.1 prototypes: a premium dark sports-management dashboard with wrestling broadcast atmosphere.
+
+Core visual principles:
+- dark navy and charcoal interface foundations,
+- metallic gold accents for prestige, headings, trims, and primary actions,
+- clean data-first layouts built for long management sessions,
+- teal/green for positive movement, amber for warnings, and crimson for danger,
+- fictional-by-default presentation with no real wrestling companies, protected talent names, or copyrighted logos.
+
+The current core UI screens being redesigned around this style are:
+- `ui/main_menu.html`
+- `ui/campaign_dashboard.html`
+- `ui/booking_board.html`
+- `ui/brand_creator.html`
+- `ui/select_brand.html`
+- `ui/weekly_planner.html`
+
+See `docs/UI_STYLE_GUIDE.md` for the full style guide.
+
 ## Core Design Pillars
 
 1. **Creative Depth**
@@ -125,11 +146,9 @@ Open an issue with one of these tags:
 
 Include reproduction steps, expected outcome, and balancing concerns where relevant.
 
-
 ## Detailed Mega Backlog
 
 For a massive checklist of features and production tasks, see **`GAME_FEATURES_AND_BACKLOG.md`**.
-
 
 ## Steam + Console Feature Shortlist
 
@@ -141,14 +160,12 @@ A prototype loading intro video and storyboard are available here:
 - `assets/video/loading_intro.mp4`
 - `assets/video/intro_loading_storyboard.md`
 
-
 ## Starter Implementation Assets
 
 To turn planning into build-ready execution, use:
 - `data/schemas/wrestler.schema.json` (canonical wrestler schema v1)
 - `docs/production/FIRST_12_WEEKS_PLAN.md` (execution plan)
 - `scripts/generate_loading_intro.sh` (intro video prototype generator)
-
 
 ## Data Validation Quickstart
 
@@ -163,7 +180,6 @@ If needed, install dependency:
 ```bash
 pip install jsonschema
 ```
-
 
 ## Framework Prototype (Now Implemented)
 
@@ -184,9 +200,7 @@ python -m ringmaster.cli
 python -m pytest -q
 ```
 
-
 > Tip: install locally with `pip install -e .` to run commands without setting `PYTHONPATH`.
-
 
 ## New Framework Systems
 
@@ -194,10 +208,8 @@ The prototype now includes:
 - `src/ringmaster/weekly.py` — weekly loop orchestration and report generation
 - `src/ringmaster/finance.py` — weekly revenue/cost projection
 - `src/ringmaster/contracts.py` — basic contract model with expiration alerts
-
 - `src/ringmaster/storylines.py` — feud heat progression engine
 - `src/ringmaster/morale.py` — wrestler morale change model from show outcomes
-
 
 ## Global Universe Framework
 
@@ -207,24 +219,19 @@ The framework now supports global competition setup:
 - multi-show setup per brand (weekly + special)
 - custom player brand creation for "start your own company" mode
 
-
 ## World Domination Progression
 
 New campaign tracking system:
 - `src/ringmaster/campaign.py` computes weekly world rank, market share, and domination score for the player brand.
 - Supports long-term progression toward global #1 status.
 
-
 ## Final Design Decision
 
-The project should proceed with **Broadcast Executive** as the canonical UI direction.
-See `docs/design/PROFESSIONAL_DESIGN_RECOMMENDATION.md` for the implementation-ready design system (fonts, colors, spacing, motion, and screen priorities).
-
+The project should proceed with the premium dark **Rookie Quest: Ringmaster** design direction captured in `docs/UI_STYLE_GUIDE.md`.
 
 ## Save/Load Prototype
 
 A versioned savegame module is now included at `src/ringmaster/savegame.py` to persist campaign progress (player brand, week, brands, and latest campaign snapshot).
-
 
 ## Intro + Start Screen Prototype
 
@@ -233,12 +240,10 @@ Added a playable intro/start concept:
 - `ui/intro_screen.html`
 - `docs/design/INTRO_VIDEO_AND_START_SCREEN.md`
 
-
 ## Fictional Content Policy
 
 To avoid licensing/trademark issues, all promotions, talent names, logos, and storylines in this project are fictional-by-default.
 The generator now uses fictional naming (`src/ringmaster/fictional.py`) instead of real-world promotion naming conventions.
-
 
 ## Show/PPV Cadence Balancing
 
@@ -248,14 +253,12 @@ New prototype modules add gameplay rules for promotion setup and scheduling:
 
 Design intent: running too many weekly shows or too many PPVs introduces trust/quality penalties to enforce strategic balance.
 
-
 ## Entrance Production and Budgeting
 
 New systems now support lights/lasers/pyro investment and wrestler-specific entrance budgeting:
 - `src/ringmaster/production.py` includes production inventory upgrades and cost scaling.
 - PPV/show entrance budget can be split per wrestler and evaluated against wrestler minimum demands.
 - Underfunding entrances creates morale penalties; over-delivery can improve crowd bonus.
-
 
 ## Weekly Planner Prototype
 
