@@ -13,7 +13,7 @@
 <div class="wrap">
   <section class="panel top gold">
     <div><h1 class="title">Booking Board / <span>Show Planner</span></h1><div class="muted" id="showMeta">Prototype event • Week 1</div></div>
-    <div class="actions"><button class="secondary" onclick="window.location.href='campaign_dashboard.html'">Dashboard</button><button class="secondary" onclick="window.location.href='weekly_planner.html'">Weekly Planner</button><button class="primary" id="saveCard">Save Card</button><button class="primary" id="saveReturn">Save + Dashboard</button></div>
+    <div class="actions"><button class="secondary" onclick="window.location.href='campaign_dashboard.html'">Dashboard</button><button class="secondary" onclick="window.location.href='weekly_planner.html'">Weekly Planner</button><button class="primary" id="saveCard">Save Card</button><button class="primary" id="runShow">Run Show</button></div>
   </section>
 
   <div class="layout">
@@ -33,7 +33,7 @@
       <div class="actions" style="margin-top:10px"><button class="secondary" id="loadDefault">Reset Default</button><button class="danger" id="clearCard">Clear Card</button></div>
       <div class="summary-grid"><div class="stat"><span class="muted">Budget</span><b>$138k</b></div><div class="stat"><span class="muted">Target</span><b>150m</b></div></div>
       <div class="warning">Tip: alternate high-energy matches with promos or angles to protect crowd pacing.</div>
-      <div class="notice" id="saveMsg">Saved cards will appear on the campaign dashboard.</div>
+      <div class="notice" id="saveMsg">Use Run Show to generate the full night report: wrestler reviews, announcers, commentary, quirks, and consequences.</div>
     </aside>
   </div>
 </div>
@@ -57,7 +57,7 @@
   function render(){segEl.innerHTML='';segments.forEach((s,idx)=>{const pace=paceImpact(s);const cls=pace>=13?'good':pace>=5?'warn':'bad';const tr=document.createElement('tr');tr.innerHTML=`<td>${idx+1}</td><td><strong>${s.name}</strong></td><td><span class="pill">${s.type}</span></td><td>${s.participants}</td><td>${s.mins}:00</td><td class="pace ${cls}">▲ ${pace}</td><td><button class="secondary" data-up="${idx}">↑</button> <button class="secondary" data-down="${idx}">↓</button></td>`;segEl.appendChild(tr)});const total=segments.reduce((a,s)=>a+s.mins,0);totalEl.textContent=total>=60?`${Math.floor(total/60)}h ${total%60}m`:`${total}m`;const warn=warnings(segments);warnEl.innerHTML=warn.map(w=>`<div class="warning">⚠ ${w}</div>`).join('');gradeEl.textContent=warn.length?'Risky':'Good';gradeEl.style.color=warn.length?'var(--amber)':'var(--green)';meter.style.width=`${Math.min(100,Math.max(18,total/180*100))}%`;segEl.querySelectorAll('[data-up]').forEach(b=>b.onclick=()=>{const i=Number(b.dataset.up);if(i>0){[segments[i-1],segments[i]]=[segments[i],segments[i-1]];render()}});segEl.querySelectorAll('[data-down]').forEach(b=>b.onclick=()=>{const i=Number(b.dataset.down);if(i<segments.length-1){[segments[i+1],segments[i]]=[segments[i],segments[i+1]];render()}})}
   document.getElementById('add').onclick=()=>{segments.push({name:document.getElementById('name').value.trim()||'Unnamed Segment',type:document.getElementById('type').value,participants:document.getElementById('participants').value.trim()||'—',mins:Math.max(1,Number(document.getElementById('mins').value||10))});render()};
   document.getElementById('saveCard').onclick=save;
-  document.getElementById('saveReturn').onclick=()=>{save();window.location.href='campaign_dashboard.html'};
+  document.getElementById('runShow').onclick=()=>{save();window.location.href='post_show_report.html'};
   document.getElementById('loadDefault').onclick=()=>{segments.splice(0,segments.length,...defaultSegments.map(s=>({...s})));render();saveMsg.textContent='Default card restored. Save it when ready.'};
   document.getElementById('clearCard').onclick=()=>{segments.splice(0,segments.length);localStorage.removeItem('ringmaster_booking_card');render();saveMsg.textContent='Card cleared from local prototype storage.'};
   render();
