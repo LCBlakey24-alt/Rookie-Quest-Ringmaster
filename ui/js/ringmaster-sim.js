@@ -50,7 +50,6 @@
   }
 
   function wrestlerPreference(name) { return ['bigFight', 'showbiz', 'sports', 'plain'][seededValue(name, 0, 3)]; }
-
   function preferenceLabel(preference) {
     return { bigFight: 'big-fight introductions', showbiz: 'theatrical showbiz hype', sports: 'clean sports-style announcing', plain: 'low-key no-nonsense intros' }[preference] || 'neutral introductions';
   }
@@ -64,59 +63,64 @@
     return base + lengthBonus + nameBonus + cardPositionBonus + latePenalty;
   }
 
+  function matchTypeEffect(segment) {
+    const type = String(segment.matchType || 'Singles Match');
+    const notes = [];
+    let score = 0, audience = 0, fatigue = 0, injuryRisk = 0, clarity = 0, momentum = 0;
+    let risky = false, spectacle = false;
+    if (segment.type !== 'Match') return { score, audience, fatigue, injuryRisk, clarity, momentum, risky, spectacle, notes: [] };
+
+    if (type === 'Singles Match') {
+      clarity += 2; fatigue += 2; notes.push('A standard singles match gave the card a clear competitive base.');
+    } else if (type === 'Tag Team Match') {
+      audience += 2; fatigue += 2; clarity -= 1; notes.push('The tag format added energy, though the moving parts made the story slightly busier.');
+    } else if (type === 'Triple Threat') {
+      audience += 3; fatigue += 3; clarity -= 2; risky = true; notes.push('The triple threat raised chaos and crowd energy, but made the finish harder to read.');
+    } else if (type === 'Fatal Four Way') {
+      audience += 4; fatigue += 4; clarity -= 3; risky = true; notes.push('The four-way packed the ring with action, at the cost of clarity and fatigue.');
+    } else if (type === 'Ladder Match') {
+      score += 3; audience += 6; fatigue += 7; injuryRisk += 5; clarity -= 2; momentum += 2; risky = true; spectacle = true; notes.push('The ladder match gave the show a spectacle spike, but added serious fatigue and injury risk.');
+    } else if (type === 'Cage Match') {
+      score += 2; audience += 5; fatigue += 6; injuryRisk += 4; clarity += 1; momentum += 2; risky = true; spectacle = true; notes.push('The cage match made the feud feel important and boosted the big-fight atmosphere.');
+    } else if (type === 'Hardcore Match') {
+      audience += 6; fatigue += 8; injuryRisk += 6; clarity -= 3; momentum += 2; risky = true; spectacle = true; notes.push('The hardcore stipulation created wild crowd energy, but the safety risk was obvious.');
+    } else if (type === 'Iron Match') {
+      score += 3; audience += 3; fatigue += 8; clarity += 3; momentum += 3; notes.push('The iron match rewarded stamina and made the result feel definitive.');
+    } else if (type === 'Battle Royal') {
+      audience += 5; fatigue += 4; injuryRisk += 2; clarity -= 4; risky = true; spectacle = true; notes.push('The battle royal felt like a big attraction, but individual stories were harder to follow.');
+    } else if (type === 'Squash Match') {
+      score -= 1; audience += 1; fatigue += 1; clarity += 3; momentum += 1; notes.push('The squash match clearly highlighted the winner, but offered limited in-ring drama.');
+    }
+    return { score, audience, fatigue, injuryRisk, clarity, momentum, risky, spectacle, notes };
+  }
+
   function finishEffect(segment) {
     const finish = String(segment.finish || '').toLowerCase();
     const isMatch = segment.type === 'Match';
     const notes = [];
-    let score = 0;
-    let audience = 0;
-    let clarity = 0;
-    let morale = 0;
-    let winnerMomentum = 0;
-    let loserMomentum = 0;
-    let dirty = false;
-    let unclear = false;
-    let protectedLoser = Boolean(segment.protectLoser);
-    let titleBoost = Boolean(segment.titleMatch) ? 3 : 0;
-
+    let score = 0, audience = 0, clarity = 0, morale = 0, winnerMomentum = 0, loserMomentum = 0;
+    let dirty = false, unclear = false;
+    const protectedLoser = Boolean(segment.protectLoser);
+    const titleBoost = Boolean(segment.titleMatch) ? 3 : 0;
     if (!isMatch) {
-      if (finish.includes('promo win') || finish.includes('story beat')) {
-        score += 1;
-        clarity += 1;
-        notes.push(`${segment.finish || 'Story Beat'} gave the non-match segment a clearer purpose.`);
-      }
+      if (finish.includes('promo win') || finish.includes('story beat')) { score += 1; clarity += 1; notes.push(`${segment.finish || 'Story Beat'} gave the non-match segment a clearer purpose.`); }
       return { score, audience, clarity, morale, winnerMomentum, loserMomentum, dirty, unclear, protectedLoser, titleBoost: 0, notes };
     }
-
     if (finish.includes('clean pinfall') || finish.includes('clean submission')) {
-      score += 4; clarity += 4; audience += 2; winnerMomentum += 3; loserMomentum -= protectedLoser ? 0 : 2;
-      notes.push(`${segment.winner || 'The winner'} got a clean finish, improving credibility and giving the crowd a clear result.`);
+      score += 4; clarity += 4; audience += 2; winnerMomentum += 3; loserMomentum -= protectedLoser ? 0 : 2; notes.push(`${segment.winner || 'The winner'} got a clean finish, improving credibility and giving the crowd a clear result.`);
     } else if (finish.includes('dirty')) {
-      score += 1; clarity -= 1; audience += 3; winnerMomentum += 2; loserMomentum += protectedLoser ? 1 : -1; dirty = true;
-      notes.push(`${segment.winner || 'The winner'} stole the result with a dirty finish. Heat increased, but clarity took a small hit.`);
+      score += 1; clarity -= 1; audience += 3; winnerMomentum += 2; loserMomentum += protectedLoser ? 1 : -1; dirty = true; notes.push(`${segment.winner || 'The winner'} stole the result with a dirty finish. Heat increased, but clarity took a small hit.`);
     } else if (finish.includes('interference')) {
-      score += 2; clarity -= 3; audience += 4; winnerMomentum += 2; loserMomentum += protectedLoser ? 2 : -1; dirty = true; unclear = true;
-      notes.push(`Interference protected the loser and created story heat, but the finish was less satisfying.`);
+      score += 2; clarity -= 3; audience += 4; winnerMomentum += 2; loserMomentum += protectedLoser ? 2 : -1; dirty = true; unclear = true; notes.push('Interference protected the loser and created story heat, but the finish was less satisfying.');
     } else if (finish.includes('dq') || finish.includes('count-out')) {
-      score -= 2; clarity -= 4; audience -= 1; loserMomentum += protectedLoser ? 1 : -2; unclear = true;
-      notes.push(`${segment.finish} kept the story moving but risked frustrating fans who wanted a real result.`);
+      score -= 2; clarity -= 4; audience -= 1; loserMomentum += protectedLoser ? 1 : -2; unclear = true; notes.push(`${segment.finish} kept the story moving but risked frustrating fans who wanted a real result.`);
     } else if (finish.includes('ref mistake')) {
-      score -= 4; clarity -= 6; audience += 1; morale -= 2; unclear = true;
-      notes.push(`The booked ref mistake made the result controversial and may annoy the wrestlers involved.`);
+      score -= 4; clarity -= 6; audience += 1; morale -= 2; unclear = true; notes.push('The booked ref mistake made the result controversial and may annoy the wrestlers involved.');
     } else if (finish.includes('time limit') || finish.includes('no contest')) {
-      score -= 1; clarity -= 3; audience += 1; loserMomentum += 1; unclear = true;
-      notes.push(`${segment.finish} avoided a decisive loss, but the crowd needed a stronger reason to accept it.`);
+      score -= 1; clarity -= 3; audience += 1; loserMomentum += 1; unclear = true; notes.push(`${segment.finish} avoided a decisive loss, but the crowd needed a stronger reason to accept it.`);
     }
-
-    if (segment.titleMatch) {
-      score += titleBoost; audience += 2;
-      notes.push(`Title stakes lifted the importance of the match.`);
-    }
-    if (protectedLoser && !finish.includes('clean')) {
-      morale += 1;
-      notes.push(`The loser was protected, reducing morale damage while keeping the story open.`);
-    }
-
+    if (segment.titleMatch) { score += titleBoost; audience += 2; notes.push('Title stakes lifted the importance of the match.'); }
+    if (protectedLoser && !finish.includes('clean')) { morale += 1; notes.push('The loser was protected, reducing morale damage while keeping the story open.'); }
     return { score, audience, clarity, morale, winnerMomentum, loserMomentum, dirty, unclear, protectedLoser, titleBoost, notes };
   }
 
@@ -124,8 +128,7 @@
     const announcer = announcerProfile || { name: 'Default Announcer', style: 'House voice', hype: 60, clarity: 60, professionalism: 60 };
     if (segment.type !== 'Match') return { boost: 0, audience: 0, notes: ['No direct wrestler intro effect on this non-match segment.'], annoyed: [] };
     const style = styleBucket(announcer.style);
-    let boost = 0, audience = 0;
-    const notes = [], annoyed = [];
+    let boost = 0, audience = 0; const notes = [], annoyed = [];
     splitParticipants(segment.participants).forEach((name) => {
       const preference = wrestlerPreference(name);
       if (preference === style) { boost += 3; audience += 2; notes.push(`${name} prefers ${preferenceLabel(preference)} and looked more fired up.`); }
@@ -140,9 +143,7 @@
     const referee = refereeProfile || { name: 'Default Referee', control: 60, accuracy: 60, toughness: 60, drama: 50, quirk: 'Calls the match mostly down the middle.' };
     if (segment.type !== 'Match') return { score: 0, clarity: 0, notes: ['No referee impact on this non-match segment.'], badCall: false, refBump: false, wrongWinner: false, injury: false, annoyed: [] };
     const chaos = seededValue(`${referee.name}-${segment.name}-${index}`, 0, 100);
-    let score = 0, clarity = 0;
-    const notes = [];
-    let badCall = false, refBump = false, wrongWinner = false, injury = false, annoyed = [];
+    let score = 0, clarity = 0; const notes = []; let badCall = false, refBump = false, wrongWinner = false, injury = false, annoyed = [];
     if (referee.control >= 80) { score += 2; clarity += 3; notes.push(`${referee.name} kept the pace controlled and the finish credible.`); }
     if (referee.accuracy < 50 && chaos > 52) { score -= 5; clarity -= 6; badCall = true; annoyed = splitParticipants(segment.participants); notes.push(`${referee.name} missed a key rope break and the crowd argued with the finish.`); }
     if (referee.accuracy < 45 && chaos > 78) { score -= 8; clarity -= 10; wrongWinner = true; badCall = true; annoyed = splitParticipants(segment.participants); notes.push(`${referee.name} appeared to count the wrong winner. Production had to scramble to explain it.`); }
@@ -164,9 +165,7 @@
     const crew = setup.crew || { name: 'Default Crew', camera: 60, timing: 60, director: 60, chaos: 50, cost: 0, quirk: 'Basic production support.' };
     const equipment = setup.equipment || { name: 'Default Equipment', safety: 60, visuals: 60, reliability: 60, cost: 0, quirk: 'Basic reliable setup.' };
     const roll = seededValue(`${crew.name}-${equipment.name}-${segment.name}-${index}`, 0, 100);
-    let score = 0, audience = 0, safety = 0;
-    const notes = [];
-    let missedShot = false, equipmentIssue = false, stageSave = false;
+    let score = 0, audience = 0, safety = 0; const notes = []; let missedShot = false, equipmentIssue = false, stageSave = false;
     if (crew.camera >= 80 && segment.type === 'Match') { score += 2; audience += 1; notes.push(`${crew.name} caught the important reactions and made the action feel bigger.`); }
     else if (crew.camera < 55 && segment.type === 'Match' && roll > 55) { score -= 4; audience -= 2; missedShot = true; notes.push(`${crew.name} missed a key camera shot, flattening the crowd reaction on broadcast.`); }
     if (equipment.visuals >= 85 && (segment.type === 'Video' || segment.type === 'Promo' || index === 0)) { score += 3; audience += 2; stageSave = true; notes.push(`${equipment.name} made the presentation feel like a bigger event.`); }
@@ -210,9 +209,10 @@
       const intelResult = intelEffect(segment, context.preShowIntel);
       const productionResult = productionSegmentEffect(segment, index, context.productionSetup);
       const finishResult = finishEffect(segment);
+      const matchTypeResult = matchTypeEffect(segment);
       const base = baseSegmentScore(segment, index, safeCard.length);
-      const score = clamp(base + announcerResult.boost + announcerResult.audience + refereeResult.score + refereeResult.clarity + intelResult.boost + intelResult.audience + productionResult.score + productionResult.audience + productionResult.safety + finishResult.score + finishResult.audience + finishResult.clarity, 1, 99);
-      return { segment, index, base, score, grade: grade(score), announcerEffect: announcerResult, refereeEffect: refereeResult, intelEffect: intelResult, productionEffect: productionResult, finishEffect: finishResult };
+      const score = clamp(base + announcerResult.boost + announcerResult.audience + refereeResult.score + refereeResult.clarity + intelResult.boost + intelResult.audience + productionResult.score + productionResult.audience + productionResult.safety + finishResult.score + finishResult.audience + finishResult.clarity + matchTypeResult.score + matchTypeResult.audience + matchTypeResult.clarity, 1, 99);
+      return { segment, index, base, score, grade: grade(score), announcerEffect: announcerResult, refereeEffect: refereeResult, intelEffect: intelResult, productionEffect: productionResult, finishEffect: finishResult, matchTypeEffect: matchTypeResult };
     });
   }
 
@@ -222,7 +222,7 @@
     return Math.round(filtered.reduce((sum, result) => sum + Number(result.score || 0), 0) / filtered.length);
   }
 
-  function buildFallout({ overall = 0, commentary = 60, announcer = 60, referee = 60, preShowIntel = null, lateChanges = 0, annoyedNames = [], badCalls = 0, refInjuries = 0, productionShow = null, productionIncidents = 0, equipmentIncidents = 0, unclearFinishes = 0, dirtyFinishes = 0 } = {}) {
+  function buildFallout({ overall = 0, commentary = 60, announcer = 60, referee = 60, preShowIntel = null, lateChanges = 0, annoyedNames = [], badCalls = 0, refInjuries = 0, productionShow = null, productionIncidents = 0, equipmentIncidents = 0, unclearFinishes = 0, dirtyFinishes = 0, riskyMatches = 0, injuryRiskTotal = 0 } = {}) {
     const fallout = { fanTrust: 0, popularity: 0, morale: 0, storyClarity: 0, cash: 0, notes: [] };
     if (overall >= 75) { fallout.fanTrust += 4; fallout.popularity += 3; fallout.cash += 18000; fallout.notes.push('Strong show lifted fan trust and ticket demand.'); }
     else if (overall < 55) { fallout.fanTrust -= 5; fallout.popularity -= 2; fallout.cash -= 9000; fallout.notes.push('Weak show hurt fan trust.'); }
@@ -237,6 +237,8 @@
     if (annoyedNames.length) { fallout.morale -= annoyedNames.length * 2; fallout.notes.push('Staff mistakes annoyed talent backstage.'); }
     if (unclearFinishes) { fallout.fanTrust -= unclearFinishes; fallout.storyClarity -= unclearFinishes * 2; fallout.notes.push('Unclear finishes made the card harder for fans to understand.'); }
     if (dirtyFinishes >= 3) { fallout.fanTrust -= 2; fallout.notes.push('Too many dirty finishes made the show feel overbooked.'); }
+    if (riskyMatches >= 3) { fallout.morale -= 2; fallout.notes.push('A risky match-heavy card raised locker-room fatigue concerns.'); }
+    if (injuryRiskTotal >= 10) { fallout.cash -= 3500; fallout.notes.push('High-risk stipulations increased medical and insurance pressure.'); }
     if (preShowIntel && preShowIntel.reacted) { fallout.fanTrust += 2; fallout.popularity += 1; fallout.morale -= Number(preShowIntel.changeRisk || 4); fallout.cash += Number(preShowIntel.fanBonus || 8) * 700; fallout.notes.push('Reacting to pre-show intel excited fans but created last-minute booking pressure.'); }
     if (preShowIntel && preShowIntel.ignored) { fallout.fanTrust -= 2; fallout.notes.push('Ignoring pre-show intel kept the show stable but cooled some fan buzz.'); }
     if (lateChanges > 1) { fallout.morale -= 2; fallout.notes.push('Multiple late changes created backstage friction.'); }
@@ -253,7 +255,7 @@
 
   window.RingmasterSim = Object.freeze({
     seededValue, clamp, splitParticipants, grade, momentumState, styleBucket, wrestlerPreference, preferenceLabel,
-    baseSegmentScore, finishEffect, announcerEffect, refereeEffect, intelEffect, productionSegmentEffect, productionShowEffects,
+    baseSegmentScore, matchTypeEffect, finishEffect, announcerEffect, refereeEffect, intelEffect, productionSegmentEffect, productionShowEffects,
     scoreCard, averageScore, buildFallout
   });
 })();
