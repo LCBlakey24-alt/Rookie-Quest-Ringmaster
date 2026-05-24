@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Rookie Quest: Ringmaster — Roster Momentum</title>
+  <style>
+    :root{--deep:#0B1324;--panel:#171A21;--card:#232734;--border:#2C3140;--gold:#D4AF37;--gold-dark:#9B7A20;--text:#F2F2F2;--muted:#A7B0C0;--teal:#19A7A5;--green:#37D67A;--amber:#FFB020;--crimson:#C62828}*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#060A12,var(--deep));color:var(--text);font-family:Inter,Arial,sans-serif}.wrap{max-width:1380px;margin:0 auto;padding:24px}.panel{background:rgba(23,26,33,.94);border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:0 16px 48px rgba(0,0,0,.28)}.gold{border-color:rgba(212,175,55,.38)}.top{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:14px;background:linear-gradient(135deg,rgba(23,26,33,.97),rgba(11,19,36,.95))}h1,h2{margin:0}.title{text-transform:uppercase;letter-spacing:.05em}.title span{color:var(--gold)}.muted,.small{color:var(--muted);font-size:13px}.actions{display:flex;gap:10px;flex-wrap:wrap}button{cursor:pointer;border-radius:10px;padding:11px 13px;font-weight:850;text-transform:uppercase;letter-spacing:.04em;border:1px solid rgba(212,175,55,.35)}.primary{background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#091018}.secondary{background:var(--card);color:var(--text);border-color:var(--border)}.toolbar{display:flex;gap:10px;align-items:center;margin-bottom:14px}.toolbar input,.toolbar select{background:#0f131c;color:var(--text);border:1px solid var(--border);border-radius:10px;padding:11px}.toolbar input{min-width:280px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.card{background:rgba(35,39,52,.72);border:1px solid var(--border);border-radius:16px;padding:14px}.card.hot{border-color:rgba(55,214,122,.45)}.card.cold{border-color:rgba(198,40,40,.45)}.name{font-size:20px;font-weight:950}.role{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:4px 9px;color:var(--muted);font-size:12px;margin-top:8px}.state{float:right;color:var(--gold);font-weight:1000;text-transform:uppercase}.row{display:flex;justify-content:space-between;border-bottom:1px solid rgba(44,49,64,.72);padding:8px 0;color:var(--muted)}.row b{color:var(--text)}.bar{height:9px;background:#101620;border:1px solid var(--border);border-radius:99px;overflow:hidden;margin-top:7px}.bar span{display:block;height:100%;background:linear-gradient(90deg,var(--crimson),var(--amber),var(--gold),var(--teal));width:50%}.note{margin-top:10px;padding:10px;border-radius:10px;border:1px solid var(--border);background:rgba(17,21,28,.72);color:var(--muted);line-height:1.45}.positive{color:var(--green)}.warning{color:var(--amber)}.bad{color:var(--crimson)}@media(max-width:1000px){.grid{grid-template-columns:1fr}.top,.toolbar{display:block}.actions{margin-top:12px}.toolbar input,.toolbar select{width:100%;margin-top:8px}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <section class="panel top gold"><div><h1 class="title">Roster <span>Momentum</span></h1><div class="small">Track who is hot, who is cold, and who is getting annoyed by your booking choices.</div></div><div class="actions"><button class="secondary" onclick="window.location.href='campaign_dashboard.html'">Dashboard</button><button class="secondary" onclick="window.location.href='booking_board.html'">Booking Board</button><button class="primary" id="seedRoster">Seed Demo Roster</button></div></section>
+  <section class="panel toolbar"><input id="search" placeholder="Search wrestler..." /><select id="filter"><option value="">All Momentum</option><option>Red Hot</option><option>Hot</option><option>Rising</option><option>Stable</option><option>Cold</option></select><span class="muted" id="count"></span></section>
+  <section class="grid" id="grid"></section>
+</div>
+<script>
+  const defaultRoster=[
+    {name:'Raven Blade',role:'High-flying rebel',popularity:64,morale:70,fatigue:18,momentum:58,notes:['Crowd likes the entrance energy.']},
+    {name:'Kayla Stone',role:'Technical ace',popularity:61,morale:74,fatigue:12,momentum:55,notes:['Reliable promo presence.']},
+    {name:'L. Cross',role:'Main-event striker',popularity:72,morale:68,fatigue:22,momentum:65,notes:['Feels close to a title moment.']},
+    {name:'Victor Kane',role:'Arrogant powerhouse',popularity:70,morale:62,fatigue:20,momentum:60,notes:['Ego needs careful handling.']},
+    {name:'J. Strike',role:'Underdog brawler',popularity:53,morale:72,fatigue:15,momentum:48,notes:['Could climb with the right feud.']},
+    {name:'Nova Vale',role:'Flashy prospect',popularity:45,morale:76,fatigue:10,momentum:44,notes:['Fans are starting to notice.']},
+    {name:'Brick Atlas',role:'Monster heel',popularity:57,morale:58,fatigue:28,momentum:50,notes:['Needs protected booking.']},
+    {name:'Mara Voltage',role:'Showbiz wildcard',popularity:49,morale:80,fatigue:8,momentum:52,notes:['Thrives with theatrical presentation.']}
+  ];
+  function getRoster(){let roster=null;try{roster=JSON.parse(localStorage.getItem('ringmaster_roster_state')||'null')}catch{}return Array.isArray(roster)&&roster.length?roster:defaultRoster.map(w=>({...w,notes:[...w.notes]}));}
+  function saveRoster(roster){localStorage.setItem('ringmaster_roster_state',JSON.stringify(roster));}
+  function state(m){if(m>=85)return 'Red Hot';if(m>=70)return 'Hot';if(m>=58)return 'Rising';if(m>=40)return 'Stable';return 'Cold';}
+  function cls(m){if(m>=70)return 'hot';if(m<40)return 'cold';return '';}
+  let roster=getRoster();saveRoster(roster);
+  const grid=document.getElementById('grid'),search=document.getElementById('search'),filter=document.getElementById('filter'),count=document.getElementById('count');
+  function render(){const q=search.value.toLowerCase().trim(),f=filter.value;const shown=roster.filter(w=>(!q||w.name.toLowerCase().includes(q))&&(!f||state(w.momentum)===f));count.textContent=`${shown.length} wrestlers shown`;grid.innerHTML=shown.sort((a,b)=>b.momentum-a.momentum).map(w=>`<article class="card ${cls(w.momentum)}"><div><span class="state">${state(w.momentum)}</span><div class="name">${w.name}</div><span class="role">${w.role||'Wrestler'}</span></div><div class="row"><span>Popularity</span><b>${w.popularity}</b></div><div class="bar"><span style="width:${w.popularity}%"></span></div><div class="row"><span>Morale</span><b>${w.morale}</b></div><div class="bar"><span style="width:${w.morale}%"></span></div><div class="row"><span>Fatigue</span><b>${w.fatigue}</b></div><div class="bar"><span style="width:${w.fatigue}%"></span></div><div class="row"><span>Momentum</span><b>${w.momentum}</b></div><div class="bar"><span style="width:${w.momentum}%"></span></div><div class="note">${(w.notes||[]).slice(-3).join('<br>')||'No recent notes.'}</div></article>`).join('')}
+  search.addEventListener('input',render);filter.addEventListener('change',render);document.getElementById('seedRoster').onclick=()=>{roster=defaultRoster.map(w=>({...w,notes:[...w.notes]}));saveRoster(roster);render()};render();
+</script>
+</body>
+</html>
