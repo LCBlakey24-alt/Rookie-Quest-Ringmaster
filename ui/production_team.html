@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Rookie Quest: Ringmaster — Production & Sponsors</title>
+  <style>
+    :root{--deep:#0B1324;--panel:#171A21;--card:#232734;--border:#2C3140;--gold:#D4AF37;--gold-dark:#9B7A20;--text:#F2F2F2;--muted:#A7B0C0;--teal:#19A7A5;--green:#37D67A;--amber:#FFB020;--crimson:#C62828}*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#060A12,var(--deep));color:var(--text);font-family:Inter,Arial,sans-serif}.wrap{max-width:1380px;margin:0 auto;padding:24px}.panel{background:rgba(23,26,33,.94);border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:0 16px 48px rgba(0,0,0,.28)}.gold{border-color:rgba(212,175,55,.38)}.top{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:14px;background:linear-gradient(135deg,rgba(23,26,33,.97),rgba(11,19,36,.95))}h1,h2,h3{margin:0}.title{text-transform:uppercase;letter-spacing:.05em}.title span{color:var(--gold)}.muted,.small{color:var(--muted);font-size:13px}.actions{display:flex;gap:10px;flex-wrap:wrap}button{cursor:pointer;border-radius:10px;padding:11px 13px;font-weight:850;text-transform:uppercase;letter-spacing:.04em;border:1px solid rgba(212,175,55,.35)}.primary{background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#091018}.secondary{background:var(--card);color:var(--text);border-color:var(--border)}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.card{background:rgba(35,39,52,.72);border:1px solid var(--border);border-radius:14px;padding:14px;margin-top:12px}.card.selected{border-color:var(--gold);box-shadow:0 0 24px rgba(212,175,55,.12)}.card-head{display:flex;justify-content:space-between;gap:12px}.name{font-size:18px;font-weight:950}.score{font-size:28px;font-weight:1000;color:var(--gold)}.pill{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:4px 9px;color:var(--muted);font-size:12px;margin:7px 6px 0 0}.bar{height:9px;background:#101620;border:1px solid var(--border);border-radius:99px;overflow:hidden;margin-top:9px}.bar span{display:block;height:100%;background:linear-gradient(90deg,var(--crimson),var(--amber),var(--gold),var(--teal));width:50%}.preview{margin-top:14px}.row{display:flex;justify-content:space-between;border-bottom:1px solid rgba(44,49,64,.75);padding:8px 0}.row b{color:var(--gold)}.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}.stat{background:rgba(35,39,52,.72);border:1px solid var(--border);border-radius:12px;padding:10px}.stat span{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em}.stat b{font-size:20px;color:var(--gold)}@media(max-width:980px){.grid,.summary{grid-template-columns:1fr}.top{display:block}.actions{margin-top:12px}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <section class="panel top gold">
+    <div><h1 class="title">Production & <span>Sponsors</span></h1><div class="small">Choose the crew, sponsor pressure, time rules, and equipment quality for tonight's show.</div></div>
+    <div class="actions"><button class="secondary" onclick="location.href='campaign_dashboard.html'">Dashboard</button><button class="secondary" onclick="location.href='booking_board.html'">Booking Board</button><button class="primary" id="saveReturn">Save + Return</button></div>
+  </section>
+
+  <section class="grid">
+    <div class="panel gold"><h2>Production Crew</h2><div class="small">Cameras, live direction, stage crew, timing discipline, and ad-break control.</div><div id="crewList"></div></div>
+    <div class="panel gold"><h2>Sponsor Package</h2><div class="small">Sponsors bring money, but can force mentions, segment rules, and timing problems.</div><div id="sponsorList"></div></div>
+    <div class="panel gold"><h2>Equipment Setup</h2><div class="small">Ring, barriers, lighting, stage, entrance hardware, and reliability.</div><div id="equipmentList"></div></div>
+    <div class="panel gold"><h2>Show Timing Rules</h2><div class="small">Hard-outs, flexible streaming time, or strict broadcast fines.</div><div id="timingList"></div></div>
+  </section>
+
+  <section class="panel preview">
+    <h2 style="color:var(--gold)">Tonight's Production Setup</h2>
+    <div class="row"><span>Crew</span><b id="selectedCrew">None</b></div>
+    <div class="row"><span>Sponsor</span><b id="selectedSponsor">None</b></div>
+    <div class="row"><span>Equipment</span><b id="selectedEquipment">None</b></div>
+    <div class="row"><span>Timing</span><b id="selectedTiming">None</b></div>
+    <div class="summary"><div class="stat"><span>Camera Quality</span><b id="cameraOut">0</b></div><div class="stat"><span>Overrun Risk</span><b id="overrunOut">0</b></div><div class="stat"><span>Sponsor Pressure</span><b id="sponsorOut">0</b></div><div class="stat"><span>Safety/Reliability</span><b id="safetyOut">0</b></div></div>
+    <div class="small" id="productionNote" style="margin-top:12px">Production choices affect show score, cash, fines, sponsor happiness, crowd immersion, and accidents.</div>
+  </section>
+</div>
+<script>
+const crews=[
+  {id:'crew_tv_veterans',name:'TV Veterans',style:'Broadcast professionals',camera:88,timing:82,director:84,chaos:28,cost:18000,quirk:'Rarely miss the money shot, but they are not cheap.'},
+  {id:'crew_indie_scramble',name:'Indie Scramble Crew',style:'Cheap local crew',camera:48,timing:44,director:50,chaos:76,cost:4500,quirk:'Affordable, enthusiastic, and absolutely capable of missing a finisher.'},
+  {id:'crew_sports_unit',name:'Sports Unit',style:'Clean sports broadcast',camera:76,timing:78,director:70,chaos:35,cost:12000,quirk:'Very clear action coverage, slightly less dramatic on entrances.'},
+  {id:'crew_cinematic',name:'Cinematic Stage Team',style:'Big visual drama',camera:82,timing:55,director:78,chaos:58,cost:15000,quirk:'Entrances look incredible, but ad breaks become a dangerous suggestion.'}
+];
+const sponsors=[
+  {id:'sponsor_none',name:'No Major Sponsor',style:'Creative freedom',money:0,pressure:5,mentions:0,fine:0,quirk:'No sponsor money, but nobody interrupts the main event to mention protein cereal.'},
+  {id:'sponsor_light',name:'Local Partner Package',style:'Light sponsor reads',money:12000,pressure:30,mentions:2,fine:3000,quirk:'A couple of tasteful mentions and a small penalty if forgotten.'},
+  {id:'sponsor_heavy',name:'Prime Broadcast Sponsor',style:'Heavy sponsor integration',money:42000,pressure:75,mentions:5,fine:15000,quirk:'Great money, but they want their logo, their line, and probably a wrestler holding the product.'},
+  {id:'sponsor_chaos',name:'Questionable Energy Drink',style:'Aggressive sponsor demands',money:55000,pressure:92,mentions:7,fine:25000,quirk:'Huge money. Awful ideas. They absolutely want a branded table spot.'}
+];
+const equipment=[
+  {id:'equip_basic',name:'Basic Indie Setup',style:'Budget ring and lights',safety:48,visuals:42,reliability:50,cost:5000,quirk:'Cheap, but the barricades wobble if someone breathes dramatically near them.'},
+  {id:'equip_standard',name:'Standard Arena Setup',style:'Reliable mid-tier',safety:72,visuals:68,reliability:74,cost:14000,quirk:'Good enough for TV without scaring the insurance company.'},
+  {id:'equip_premium',name:'Premium Stage Build',style:'Big-show presentation',safety:84,visuals:92,reliability:80,cost:30000,quirk:'Pyro, lights, screens, and enough metal truss to frighten accounting.'},
+  {id:'equip_old_school',name:'Old-School Road Kit',style:'Rugged but plain',safety:66,visuals:46,reliability:86,cost:9000,quirk:'Not pretty, but it has survived worse towns than this.'}
+];
+const timings=[
+  {id:'time_stream',name:'Flexible Streaming Slot',style:'Flexible runtime',hardOut:25,fineRisk:10,overtimeFine:2000,quirk:'You can overrun, but the pacing still suffers if the show drags.'},
+  {id:'time_tv_soft',name:'Soft TV Window',style:'Some flexibility',hardOut:55,fineRisk:45,overtimeFine:10000,quirk:'A small overrun is survivable. A big one gets an angry phone call.'},
+  {id:'time_tv_hard',name:'Hard Network Out',style:'Strict broadcast timing',hardOut:88,fineRisk:85,overtimeFine:35000,quirk:'If you run over, somebody in a suit starts calculating your pain.'},
+  {id:'time_ppv',name:'Premium Event Window',style:'Long but expensive',hardOut:40,fineRisk:30,overtimeFine:15000,quirk:'More room to breathe, but production costs climb fast.'}
+];
+let selected=JSON.parse(localStorage.getItem('ringmaster_production_setup')||'{}');
+selected.crewId=selected.crewId||crews[0].id;selected.sponsorId=selected.sponsorId||sponsors[1].id;selected.equipmentId=selected.equipmentId||equipment[1].id;selected.timingId=selected.timingId||timings[1].id;
+function avgCrew(c){return Math.round((c.camera+c.timing+c.director+(100-c.chaos))/4)}
+function avgEquipment(e){return Math.round((e.safety+e.visuals+e.reliability)/3)}
+function card(item,type,score,label){const selectedId=selected[`${type}Id`];const sel=selectedId===item.id?' selected':'';return `<article class="card${sel}"><div class="card-head"><div><div class="name">${item.name}</div><span class="pill">${item.style}</span><span class="pill">${label}</span></div><div class="score">${score}</div></div><div class="bar"><span style="width:${score}%"></span></div><div class="small" style="margin-top:9px">${item.quirk}</div><button class="secondary" data-type="${type}" data-id="${item.id}" style="margin-top:10px">Select</button></article>`}
+function render(){document.getElementById('crewList').innerHTML=crews.map(c=>card(c,'crew',avgCrew(c),`Cost $${c.cost.toLocaleString()}`)).join('');document.getElementById('sponsorList').innerHTML=sponsors.map(s=>card(s,'sponsor',Math.max(5,100-s.pressure),`+$${s.money.toLocaleString()}`)).join('');document.getElementById('equipmentList').innerHTML=equipment.map(e=>card(e,'equipment',avgEquipment(e),`Cost $${e.cost.toLocaleString()}`)).join('');document.getElementById('timingList').innerHTML=timings.map(t=>card(t,'timing',Math.max(5,100-t.fineRisk),`Fine $${t.overtimeFine.toLocaleString()}`)).join('');const crew=crews.find(x=>x.id===selected.crewId), sponsor=sponsors.find(x=>x.id===selected.sponsorId), equip=equipment.find(x=>x.id===selected.equipmentId), timing=timings.find(x=>x.id===selected.timingId);document.getElementById('selectedCrew').textContent=crew.name;document.getElementById('selectedSponsor').textContent=sponsor.name;document.getElementById('selectedEquipment').textContent=equip.name;document.getElementById('selectedTiming').textContent=timing.name;document.getElementById('cameraOut').textContent=crew.camera;document.getElementById('overrunOut').textContent=timing.fineRisk;document.getElementById('sponsorOut').textContent=sponsor.pressure;document.getElementById('safetyOut').textContent=Math.round((equip.safety+equip.reliability)/2);document.getElementById('productionNote').textContent=`${crew.quirk} ${sponsor.quirk} ${equip.quirk} ${timing.quirk}`;document.querySelectorAll('[data-type]').forEach(btn=>btn.onclick=()=>{selected[`${btn.dataset.type}Id`]=btn.dataset.id;save();render()})}
+function save(){const payload={crewId:selected.crewId,sponsorId:selected.sponsorId,equipmentId:selected.equipmentId,timingId:selected.timingId,crew:crews.find(x=>x.id===selected.crewId),sponsor:sponsors.find(x=>x.id===selected.sponsorId),equipment:equipment.find(x=>x.id===selected.equipmentId),timing:timings.find(x=>x.id===selected.timingId)};localStorage.setItem('ringmaster_production_setup',JSON.stringify(payload));return payload}
+document.getElementById('saveReturn').onclick=()=>{save();location.href='booking_board.html'};render();save();
+</script>
+</body>
+</html>
